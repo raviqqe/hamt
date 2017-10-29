@@ -35,6 +35,8 @@ func TestSetOperations(t *testing.T) {
 
 			if s.Find(e) == nil {
 				assert.Equal(t, s.Size()+1, r.Size())
+			} else {
+				assert.Equal(t, s.Size(), r.Size())
 			}
 		} else {
 			r = s.Delete(e)
@@ -43,6 +45,8 @@ func TestSetOperations(t *testing.T) {
 
 			if s.Find(e) != nil {
 				assert.Equal(t, s.Size()-1, r.Size())
+			} else {
+				assert.Equal(t, s.Size(), r.Size())
 			}
 		}
 
