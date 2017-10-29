@@ -2,8 +2,8 @@ package hamt
 
 type bucket []Entry
 
-func newBucket() bucket {
-	return nil
+func newBucket(es []Entry) bucket {
+	return bucket(es)
 }
 
 func (b bucket) Insert(e Entry) Node {
