@@ -27,6 +27,7 @@ func (s Set) Find(e Entry) Entry {
 }
 
 // FirstRest returns a value in a set and a rest of the set.
+// This method is useful for iteration.
 func (s Set) FirstRest() (Entry, Set) {
 	e, n := s.hamt.FirstRest()
 	return e, Set{n.(hamt)}
