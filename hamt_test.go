@@ -90,7 +90,9 @@ func BenchmarkHamtInsert(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		h = h.Insert(EntryInt(i % (b.N / 3)))
+		for i := 0; i < iterations; i++ {
+			h = h.Insert(EntryInt(i % (iterations / 3)))
+		}
 	}
 }
 
@@ -98,12 +100,16 @@ func BenchmarkHamtDelete(b *testing.B) {
 	var h node = newHamt(0)
 
 	for i := 0; i < b.N; i++ {
-		h = h.Insert(EntryInt(i))
+		for i := 0; i < iterations; i++ {
+			h = h.Insert(EntryInt(i))
+		}
 	}
 
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		h, _ = h.Delete(EntryInt(i))
+		for i := 0; i < iterations; i++ {
+			h, _ = h.Delete(EntryInt(i))
+		}
 	}
 }

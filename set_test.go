@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const iterations = 10000
-
 func TestNewSet(t *testing.T) {
 	NewSet()
 }
@@ -86,6 +84,8 @@ func BenchmarkSetInsert(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		s = s.Insert(EntryInt(i))
+		for i := 0; i < iterations; i++ {
+			s = s.Insert(EntryInt(i))
+		}
 	}
 }
