@@ -29,8 +29,9 @@ func TestHamtDelete(t *testing.T) {
 	assert.Equal(t, 1, h.Size())
 	assert.Equal(t, EntryInt(42), h.Find(EntryInt(42)).(EntryInt))
 
-	h = h.Delete(EntryInt(42))
+	h, changed := h.Delete(EntryInt(42))
 
+	assert.True(t, changed)
 	assert.Equal(t, 0, h.Size())
 	assert.Equal(t, nil, h.Find(EntryInt(42)))
 }

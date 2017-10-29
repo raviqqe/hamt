@@ -20,14 +20,14 @@ func (b bucket) Find(e Entry) Entry {
 	return nil
 }
 
-func (b bucket) Delete(e Entry) Node {
+func (b bucket) Delete(e Entry) (Node, bool) {
 	for i, f := range b {
 		if e.Equal(f) {
-			return append(b[:i], b[i+1:]...)
+			return append(b[:i], b[i+1:]...), true
 		}
 	}
 
-	return b
+	return b, false
 }
 
 func (b bucket) FirstRest() (Entry, Node) {

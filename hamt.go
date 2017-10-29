@@ -38,16 +38,21 @@ func (h Hamt) Insert(e Entry) Node {
 }
 
 // Delete deletes a value from a HAMT.
-func (h Hamt) Delete(e Entry) Node {
+func (h Hamt) Delete(e Entry) (Node, bool) {
 	i := h.calculateIndex(e)
 
 	switch x := h.children[i].(type) {
 	case Entry:
 		if x.Equal(e) {
-			return h.setChild(i, nil)
+			return h.setChild(i, nil), true
 		}
 	case Node:
-		n := x.Delete(e)
+		n, b := x.Delete(e)
+
+		if !b {
+			return n, false
+		}
+
 		var c interface{} = n
 
 		switch n.Size() {
@@ -58,10 +63,10 @@ func (h Hamt) Delete(e Entry) Node {
 			c = e
 		}
 
-		return h.setChild(i, c)
+		return h.setChild(i, c), true
 	}
 
-	return h
+	return h, false
 }
 
 // Find finds a value in a HAMT.
@@ -85,7 +90,8 @@ func (h Hamt) FirstRest() (Entry, Node) {
 	// Traverse entries and sub nodes separately for cache locality.
 	for _, c := range h.children {
 		if e, ok := c.(Entry); ok {
-			return e, h.Delete(e)
+			h, _ := h.Delete(e)
+			return e, h
 		}
 	}
 

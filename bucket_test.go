@@ -20,8 +20,9 @@ func TestBucketInsert(t *testing.T) {
 }
 
 func TestBucketDelete(t *testing.T) {
-	b := newBucket(nil).Insert(EntryInt(42)).Delete(EntryInt(42))
+	b, changed := newBucket(nil).Insert(EntryInt(42)).Delete(EntryInt(42))
 
+	assert.True(t, changed)
 	assert.Equal(t, 0, b.Size())
 	assert.Equal(t, nil, b.Find(EntryInt(42)))
 }
