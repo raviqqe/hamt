@@ -51,3 +51,27 @@ func TestSetOperations(t *testing.T) {
 		s = r
 	}
 }
+
+func TestSetFirstRest(t *testing.T) {
+	s := NewSet()
+	e, r := s.FirstRest()
+
+	assert.Equal(t, nil, e)
+	assert.Equal(t, 0, r.Size())
+
+	s = s.Insert(EntryInt(42))
+	e, r = s.FirstRest()
+
+	assert.Equal(t, EntryInt(42), e)
+	assert.Equal(t, 0, r.Size())
+
+	s = s.Insert(EntryInt(2049))
+	size := s.Size()
+
+	for i := 0; i < size; i++ {
+		e, s = s.FirstRest()
+
+		assert.NotEqual(t, nil, e)
+		assert.Equal(t, 1-i, s.Size())
+	}
+}
