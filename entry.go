@@ -1,6 +1,6 @@
 package hamt
 
-// Entry represents a hashable type.
+// Entry represents an entry in a HAMT.
 type Entry interface {
 	Key() int32
 	Equal(Entry) bool
