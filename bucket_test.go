@@ -17,6 +17,37 @@ func TestBucketInsert(t *testing.T) {
 
 	assert.Equal(t, 1, b.Size())
 	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+
+	b = b.Insert(EntryInt(42))
+
+	assert.Equal(t, 1, b.Size())
+	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+
+	b = b.Insert(EntryInt(2049))
+
+	assert.Equal(t, 2, b.Size())
+	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+	assert.Equal(t, EntryInt(2049), b.Find(EntryInt(2049)))
+
+	b = b.Insert(EntryInt(2049))
+
+	assert.Equal(t, 2, b.Size())
+	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+	assert.Equal(t, EntryInt(2049), b.Find(EntryInt(2049)))
+}
+
+func TestBucketInsertAsDictionary(t *testing.T) {
+	kv := NewEntryKeyValue(0, "foo")
+	b := newBucket().Insert(kv)
+
+	assert.Equal(t, 1, b.Size())
+	assert.EqualValues(t, kv, b.Find(kv))
+
+	new := NewEntryKeyValue(0, "bar")
+	b = b.Insert(new)
+
+	assert.Equal(t, 1, b.Size())
+	assert.EqualValues(t, new, b.Find(kv))
 }
 
 func TestBucketDelete(t *testing.T) {

@@ -7,11 +7,16 @@ func newBucket() bucket {
 }
 
 func (b bucket) Insert(e Entry) node {
-	if b.Find(e) == nil {
-		return append(b, e)
+	for i, f := range b {
+		if e.Equal(f) {
+			new := make(bucket, len(b))
+			copy(new, b)
+			new[i] = e
+			return new
+		}
 	}
 
-	return b
+	return append(b, e)
 }
 
 func (b bucket) Find(e Entry) Entry {

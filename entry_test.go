@@ -22,6 +22,29 @@ func (i EntryInt) Equal(e Entry) bool {
 	return i == j
 }
 
+type EntryKeyValue struct {
+	key   int32
+	value string
+}
+
+func NewEntryKeyValue(k int32, v string) EntryKeyValue {
+	return EntryKeyValue{k, v}
+}
+
+func (kv EntryKeyValue) Key() int32 {
+	return kv.key
+}
+
+func (kv EntryKeyValue) Equal(e Entry) bool {
+	x, ok := e.(EntryKeyValue)
+
+	if !ok {
+		return false
+	}
+
+	return kv.key == x.key
+}
+
 func TestEntry(t *testing.T) {
 	t.Log(Entry(EntryInt(42)))
 }
