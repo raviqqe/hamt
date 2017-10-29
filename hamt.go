@@ -28,7 +28,7 @@ func (h hamt) Insert(e Entry) node {
 		if l*arityBits > arity {
 			c = newBucket().Insert(x).Insert(e)
 		} else {
-			c = newHamt(l).Insert(e)
+			c = newHamt(l).Insert(x).Insert(e)
 		}
 	case node:
 		c = x.Insert(e)
