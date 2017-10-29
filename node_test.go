@@ -7,5 +7,5 @@ func TestHamtAsnode(t *testing.T) {
 }
 
 func TestBucketAsnode(t *testing.T) {
-	t.Log(node(newBucket(nil)))
+	t.Log(node(newBucket()))
 }

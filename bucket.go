@@ -2,12 +2,16 @@ package hamt
 
 type bucket []Entry
 
-func newBucket(es []Entry) bucket {
-	return bucket(es)
+func newBucket() bucket {
+	return bucket(nil)
 }
 
 func (b bucket) Insert(e Entry) node {
-	return append(b, e)
+	if b.Find(e) == nil {
+		return append(b, e)
+	}
+
+	return b
 }
 
 func (b bucket) Find(e Entry) Entry {

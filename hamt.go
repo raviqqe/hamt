@@ -26,7 +26,7 @@ func (h hamt) Insert(e Entry) node {
 		l := h.level + 1
 
 		if l*arityBits > arity {
-			c = newBucket([]Entry{x, e})
+			c = newBucket().Insert(x).Insert(e)
 		} else {
 			c = newHamt(l).Insert(e)
 		}
