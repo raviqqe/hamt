@@ -53,3 +53,21 @@ func TestBucketFirstRest(t *testing.T) {
 		assert.Equal(t, 1-i, b.Size())
 	}
 }
+
+func TestBucketState(t *testing.T) {
+	var b node = newBucket()
+
+	assert.Equal(t, empty, b.State())
+
+	b = b.Insert(EntryInt(42))
+
+	assert.Equal(t, singleton, b.State())
+
+	b = b.Insert(EntryInt(2049))
+
+	assert.Equal(t, more, b.State())
+
+	b = b.Insert(EntryInt(0))
+
+	assert.Equal(t, more, b.State())
+}
