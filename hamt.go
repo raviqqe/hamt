@@ -34,13 +34,33 @@ func (h Hamt) Insert(e Entry) Node {
 		c = x.Insert(e)
 	}
 
-	g := h
-	g.children[i] = c
-	return g
+	return h.cloneWithNewChild(i, c)
 }
 
 // Delete deletes a value from a HAMT.
 func (h Hamt) Delete(e Entry) Node {
+	i := h.calculateIndex(e)
+
+	switch x := h.children[i].(type) {
+	case Entry:
+		if x.Equal(e) {
+			return h.cloneWithNewChild(i, nil)
+		}
+	case Node:
+		n := x.Delete(e)
+		var c interface{} = n
+
+		switch n.Size() {
+		case 0:
+			c = nil
+		case 1:
+			e, _ := n.FirstRest()
+			c = e
+		}
+
+		return h.cloneWithNewChild(i, c)
+	}
+
 	return h
 }
 
@@ -72,11 +92,7 @@ func (h Hamt) FirstRest() (Entry, Node) {
 	for i, c := range h.children {
 		if n, ok := c.(Node); ok {
 			e, n := n.FirstRest()
-
-			g := h
-			g.children[i] = n
-
-			return e, g
+			return e, h.cloneWithNewChild(i, n)
 		}
 	}
 
@@ -101,4 +117,10 @@ func (h Hamt) Size() int {
 
 func (h Hamt) calculateIndex(e Entry) int {
 	return int((e.Key() >> uint(arityBits*h.level)) % arity)
+}
+
+func (h Hamt) cloneWithNewChild(i int, c interface{}) Hamt {
+	g := h
+	g.children[i] = c
+	return g
 }
