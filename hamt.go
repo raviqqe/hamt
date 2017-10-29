@@ -50,7 +50,7 @@ func (h hamt) Delete(e Entry) (node, bool) {
 		n, b := x.Delete(e)
 
 		if !b {
-			return n, false
+			return h, false
 		}
 
 		var c interface{} = n
