@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: golang
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            apt -y update --fix-missing
+            apt -y install rake
+      - run:
+          name: Build
+          command: rake build
+      - run:
+          name: Test
+          command: rake test
