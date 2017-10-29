@@ -3,19 +3,19 @@ package hamt
 const arityBits = 5
 const arity = 32
 
-// Hamt represents a HAMT data structure.
-type Hamt struct {
+// hamt represents a HAMT data structure.
+type hamt struct {
 	level    uint8
 	children [arity]interface{}
 }
 
-// NewHamt creates a new HAMT.
-func NewHamt(level uint8) Hamt {
-	return Hamt{level: level}
+// newHamt creates a new HAMT.
+func newHamt(level uint8) hamt {
+	return hamt{level: level}
 }
 
 // Insert inserts a value into a HAMT.
-func (h Hamt) Insert(e Entry) Node {
+func (h hamt) Insert(e Entry) node {
 	i := h.calculateIndex(e)
 	var c interface{}
 
@@ -28,9 +28,9 @@ func (h Hamt) Insert(e Entry) Node {
 		if l*arityBits > arity {
 			c = newBucket([]Entry{x, e})
 		} else {
-			c = NewHamt(l).Insert(e)
+			c = newHamt(l).Insert(e)
 		}
-	case Node:
+	case node:
 		c = x.Insert(e)
 	}
 
@@ -38,7 +38,7 @@ func (h Hamt) Insert(e Entry) Node {
 }
 
 // Delete deletes a value from a HAMT.
-func (h Hamt) Delete(e Entry) (Node, bool) {
+func (h hamt) Delete(e Entry) (node, bool) {
 	i := h.calculateIndex(e)
 
 	switch x := h.children[i].(type) {
@@ -46,7 +46,7 @@ func (h Hamt) Delete(e Entry) (Node, bool) {
 		if x.Equal(e) {
 			return h.setChild(i, nil), true
 		}
-	case Node:
+	case node:
 		n, b := x.Delete(e)
 
 		if !b {
@@ -70,7 +70,7 @@ func (h Hamt) Delete(e Entry) (Node, bool) {
 }
 
 // Find finds a value in a HAMT.
-func (h Hamt) Find(e Entry) Entry {
+func (h hamt) Find(e Entry) Entry {
 	i := h.calculateIndex(e)
 
 	switch x := h.children[i].(type) {
@@ -78,7 +78,7 @@ func (h Hamt) Find(e Entry) Entry {
 		if x.Equal(e) {
 			return x
 		}
-	case Node:
+	case node:
 		return x.Find(e)
 	}
 
@@ -86,7 +86,7 @@ func (h Hamt) Find(e Entry) Entry {
 }
 
 // FirstRest returns a first value and a HAMT without it.
-func (h Hamt) FirstRest() (Entry, Node) {
+func (h hamt) FirstRest() (Entry, node) {
 	// Traverse entries and sub nodes separately for cache locality.
 	for _, c := range h.children {
 		if e, ok := c.(Entry); ok {
@@ -96,7 +96,7 @@ func (h Hamt) FirstRest() (Entry, Node) {
 	}
 
 	for i, c := range h.children {
-		if n, ok := c.(Node); ok {
+		if n, ok := c.(node); ok {
 			e, n := n.FirstRest()
 			return e, h.setChild(i, n)
 		}
@@ -106,14 +106,14 @@ func (h Hamt) FirstRest() (Entry, Node) {
 }
 
 // Size returns a size of a HAMT.
-func (h Hamt) Size() int {
+func (h hamt) Size() int {
 	s := 0
 
 	for _, c := range h.children {
 		switch x := c.(type) {
 		case Entry:
 			s++
-		case Node:
+		case node:
 			s += x.Size()
 		}
 	}
@@ -121,11 +121,11 @@ func (h Hamt) Size() int {
 	return s
 }
 
-func (h Hamt) calculateIndex(e Entry) int {
+func (h hamt) calculateIndex(e Entry) int {
 	return int((e.Key() >> uint(arityBits*h.level)) % arity)
 }
 
-func (h Hamt) setChild(i int, c interface{}) Hamt {
+func (h hamt) setChild(i int, c interface{}) hamt {
 	g := h
 	g.children[i] = c
 	return g

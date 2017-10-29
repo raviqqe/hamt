@@ -1,10 +1,10 @@
 package hamt
 
-// Node represents a node in a HAMT.
-type Node interface {
-	Insert(Entry) Node
-	Delete(Entry) (Node, bool)
+// node represents a node in a HAMT.
+type node interface {
+	Insert(Entry) node
+	Delete(Entry) (node, bool)
 	Find(Entry) Entry
-	FirstRest() (Entry, Node)
+	FirstRest() (Entry, node)
 	Size() int
 }

@@ -6,7 +6,7 @@ func newBucket(es []Entry) bucket {
 	return bucket(es)
 }
 
-func (b bucket) Insert(e Entry) Node {
+func (b bucket) Insert(e Entry) node {
 	return append(b, e)
 }
 
@@ -20,7 +20,7 @@ func (b bucket) Find(e Entry) Entry {
 	return nil
 }
 
-func (b bucket) Delete(e Entry) (Node, bool) {
+func (b bucket) Delete(e Entry) (node, bool) {
 	for i, f := range b {
 		if e.Equal(f) {
 			return append(b[:i], b[i+1:]...), true
@@ -30,7 +30,7 @@ func (b bucket) Delete(e Entry) (Node, bool) {
 	return b, false
 }
 
-func (b bucket) FirstRest() (Entry, Node) {
+func (b bucket) FirstRest() (Entry, node) {
 	if b.Size() == 0 {
 		return nil, b
 	}

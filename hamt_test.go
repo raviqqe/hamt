@@ -7,11 +7,11 @@ import (
 )
 
 func TestNewHamt(t *testing.T) {
-	NewHamt(0)
+	newHamt(0)
 }
 
 func TestHamtInsert(t *testing.T) {
-	h := NewHamt(0).Insert(EntryInt(42))
+	h := newHamt(0).Insert(EntryInt(42))
 
 	assert.Equal(t, 1, h.Size())
 	assert.Equal(t, EntryInt(42), h.Find(EntryInt(42)).(EntryInt))
@@ -24,7 +24,7 @@ func TestHamtInsert(t *testing.T) {
 }
 
 func TestHamtDelete(t *testing.T) {
-	h := NewHamt(0).Insert(EntryInt(42))
+	h := newHamt(0).Insert(EntryInt(42))
 
 	assert.Equal(t, 1, h.Size())
 	assert.Equal(t, EntryInt(42), h.Find(EntryInt(42)).(EntryInt))
@@ -37,11 +37,11 @@ func TestHamtDelete(t *testing.T) {
 }
 
 func TestHamtFind(t *testing.T) {
-	assert.Equal(t, nil, NewHamt(0).Find(EntryInt(42)))
+	assert.Equal(t, nil, newHamt(0).Find(EntryInt(42)))
 }
 
 func TestHamtFirstRest(t *testing.T) {
-	var n Node = NewHamt(0)
+	var n node = newHamt(0)
 	e, m := n.FirstRest()
 
 	assert.Equal(t, nil, e)
@@ -65,7 +65,7 @@ func TestHamtFirstRest(t *testing.T) {
 }
 
 func TestHamtSize(t *testing.T) {
-	assert.Equal(t, 0, NewHamt(0).Size())
+	assert.Equal(t, 0, newHamt(0).Size())
 }
 
 func TestArity(t *testing.T) {
