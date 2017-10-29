@@ -83,3 +83,17 @@ func TestHamtSize(t *testing.T) {
 func TestArity(t *testing.T) {
 	assert.Equal(t, arity, int(1<<arityBits))
 }
+
+func BenchmarkHamtDelete(b *testing.B) {
+	var h node = newHamt(0)
+
+	for i := 0; i < b.N; i++ {
+		h = h.Insert(EntryInt(i))
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		h, _ = h.Delete(EntryInt(i))
+	}
+}
