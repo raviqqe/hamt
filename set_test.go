@@ -28,13 +28,26 @@ func TestSetOperations(t *testing.T) {
 
 	for i := 0; i < iterations; i++ {
 		e := EntryInt(rand.Int31() % 256)
+		var r Set
 
 		if rand.Int()%2 == 0 {
-			s = s.Insert(e)
-			assert.Equal(t, e, s.Find(e))
+			r = s.Insert(e)
+
+			assert.Equal(t, e, r.Find(e))
+
+			if s.Find(e) == nil {
+				assert.Equal(t, s.Size()+1, r.Size())
+			}
 		} else {
-			s = s.Delete(e)
-			assert.Equal(t, nil, s.Find(e))
+			r = s.Delete(e)
+
+			assert.Equal(t, nil, r.Find(e))
+
+			if s.Find(e) != nil {
+				assert.Equal(t, s.Size()-1, r.Size())
+			}
 		}
+
+		s = r
 	}
 }
