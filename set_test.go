@@ -79,3 +79,13 @@ func TestSetFirstRest(t *testing.T) {
 func TestSetSize(t *testing.T) {
 	assert.Equal(t, 0, NewSet().Size())
 }
+
+func BenchmarkSetInsert(b *testing.B) {
+	s := NewSet()
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		s = s.Insert(EntryInt(i))
+	}
+}

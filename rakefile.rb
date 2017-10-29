@@ -9,3 +9,7 @@ end
 task test: :deps do
   sh 'go test -cover'
 end
+
+task bench: :deps do
+  sh 'go test -bench .'
+end
