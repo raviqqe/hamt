@@ -75,9 +75,7 @@ func (h hamt) Delete(e Entry) (node, bool) {
 
 // Find finds a value in a HAMT.
 func (h hamt) Find(e Entry) Entry {
-	i := h.calculateIndex(e)
-
-	switch x := h.children[i].(type) {
+	switch x := h.children[h.calculateIndex(e)].(type) {
 	case Entry:
 		if x.Equal(e) {
 			return x
