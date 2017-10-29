@@ -16,7 +16,7 @@ func NewHamt(level uint8) Hamt {
 
 // Insert inserts a value into a HAMT.
 func (h Hamt) Insert(e Entry) Node {
-	i := (e.Key() >> uint(arityBits*h.level)) % arity
+	i := h.calculateIndex(e)
 	var c interface{}
 
 	switch x := h.contents[i].(type) {
@@ -46,6 +46,17 @@ func (h Hamt) Delete(e Entry) Node {
 
 // Find finds a value in a HAMT.
 func (h Hamt) Find(e Entry) Entry {
+	i := h.calculateIndex(e)
+
+	switch x := h.contents[i].(type) {
+	case Entry:
+		if x.Equal(e) {
+			return x
+		}
+	case Node:
+		return x.Find(e)
+	}
+
 	return nil
 }
 
@@ -86,4 +97,8 @@ func (h Hamt) Size() int {
 	}
 
 	return s
+}
+
+func (h Hamt) calculateIndex(e Entry) int {
+	return int((e.Key() >> uint(arityBits*h.level)) % arity)
 }
