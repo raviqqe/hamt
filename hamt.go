@@ -55,10 +55,10 @@ func (h hamt) Delete(e Entry) (node, bool) {
 
 		var c interface{} = n
 
-		switch n.Size() {
-		case 0:
+		switch n.State() {
+		case empty:
 			c = nil
-		case 1:
+		case singleton:
 			e, _ := n.FirstRest()
 			c = e
 		}
@@ -102,7 +102,30 @@ func (h hamt) FirstRest() (Entry, node) {
 		}
 	}
 
-	return nil, h // There is no entry inside. (h.Size() == 0)
+	return nil, h // There is no entry inside.
+}
+
+// State returns a state of a HAMT.
+func (h hamt) State() nodeState {
+	es := 0
+	ns := 0
+
+	for _, c := range h.children {
+		switch c.(type) {
+		case Entry:
+			es++
+		case node:
+			ns++
+		}
+	}
+
+	if es+ns == 0 {
+		return empty
+	} else if es == 1 && ns == 0 {
+		return singleton
+	}
+
+	return more
 }
 
 // Size returns a size of a HAMT.

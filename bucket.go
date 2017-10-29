@@ -35,11 +35,22 @@ func (b bucket) Delete(e Entry) (node, bool) {
 }
 
 func (b bucket) FirstRest() (Entry, node) {
-	if b.Size() == 0 {
+	if len(b) == 0 {
 		return nil, b
 	}
 
 	return b[0], b[1:]
+}
+
+func (b bucket) State() nodeState {
+	switch len(b) {
+	case 0:
+		return empty
+	case 1:
+		return singleton
+	}
+
+	return more
 }
 
 func (b bucket) Size() int {
