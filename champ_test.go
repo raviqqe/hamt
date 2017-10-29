@@ -1,6 +1,10 @@
 package champ
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestNewChamp(t *testing.T) {
 	NewChamp()
@@ -24,4 +28,9 @@ func TestChampFind(t *testing.T) {
 func TestChampFirstRest(t *testing.T) {
 	champ := NewChamp()
 	champ.FirstRest()
+}
+
+func TestChampSize(t *testing.T) {
+	champ := NewChamp()
+	assert.Equal(t, 0, champ.Size())
 }

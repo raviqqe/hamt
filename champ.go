@@ -27,3 +27,8 @@ func (champ Champ) Find(x interface{}) interface{} {
 func (champ Champ) FirstRest() (interface{}, Champ) {
 	return nil, champ
 }
+
+// Size returns a size of a CHAMP.
+func (champ Champ) Size() int {
+	return 0
+}
