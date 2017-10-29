@@ -23,6 +23,10 @@ func (h hamt) Insert(e Entry) node {
 	case nil:
 		c = e
 	case Entry:
+		if x.Equal(e) {
+			return h.setChild(i, e)
+		}
+
 		l := h.level + 1
 
 		if l*arityBits > arity {
