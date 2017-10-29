@@ -17,3 +17,6 @@ jobs:
       - run:
           name: Test
           command: rake test
+      - run:
+          name: Benchmark
+          command: rake bench
