@@ -25,6 +25,8 @@ func TestSetOperations(t *testing.T) {
 	s := NewSet()
 
 	for i := 0; i < iterations; i++ {
+		assert.Equal(t, s.hamt.Size(), s.Size())
+
 		e := EntryInt(rand.Int31() % 256)
 		var r Set
 
@@ -90,6 +92,19 @@ func BenchmarkSetInsert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < iterations; i++ {
 			s = s.Insert(EntryInt(i))
+		}
+	}
+}
+
+func BenchmarkSetSize(b *testing.B) {
+	s := NewSet()
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for i := 0; i < iterations; i++ {
+			s = s.Insert(EntryInt(i))
+			b.Log(s.Size())
 		}
 	}
 }
