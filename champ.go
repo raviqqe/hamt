@@ -9,22 +9,22 @@ func NewChamp() Champ {
 }
 
 // Insert inserts a value into a CHAMP.
-func (champ Champ) Insert(x Keyed) Champ {
+func (champ Champ) Insert(e Entry) Champ {
 	return champ
 }
 
 // Delete deletes a value from a CHAMP.
-func (champ Champ) Delete(x Keyed) Champ {
+func (champ Champ) Delete(e Entry) Champ {
 	return champ
 }
 
 // Find finds a value in a CHAMP.
-func (champ Champ) Find(x Keyed) Keyed {
+func (champ Champ) Find(e Entry) Entry {
 	return nil
 }
 
 // FirstRest returns a first value and a CHAMP without it.
-func (champ Champ) FirstRest() (Keyed, Champ) {
+func (champ Champ) FirstRest() (Entry, Champ) {
 	return nil, champ
 }
 
