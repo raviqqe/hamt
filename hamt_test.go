@@ -36,8 +36,7 @@ func TestHamtDelete(t *testing.T) {
 }
 
 func TestHamtFind(t *testing.T) {
-	h := NewHamt(0)
-	h.Find(EntryInt(42))
+	assert.Equal(t, nil, NewHamt(0).Find(EntryInt(42)))
 }
 
 func TestHamtFirstRest(t *testing.T) {
