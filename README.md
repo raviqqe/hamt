@@ -16,11 +16,19 @@ arrays.
 
 [GoDoc](https://godoc.org/github.com/raviqqe/hamt.go)
 
+## Technical notes
+
+The implementation canonicalizes tree structures of HAMT by eliminating
+intermediate nodes during delete operations as described
+in [the CHAMP paper][champ].
+
 ## References
 
 - [Ideal Hash Trees](https://infoscience.epfl.ch/record/64398/files/idealhashtrees.pdf)
-- [Optimizing Hash-Array Mapped Tries for Fast and Lean Immutable JVM Collections](https://michael.steindorfer.name/publications/oopsla15.pdf)
+- [Optimizing Hash-Array Mapped Tries for Fast and Lean Immutable JVM Collections][champ]
 
 ## License
 
 [The Unlicense](https://unlicense.org/)
+
+[champ]: https://michael.steindorfer.name/publications/oopsla15.pdf
