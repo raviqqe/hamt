@@ -75,3 +75,7 @@ func TestSetFirstRest(t *testing.T) {
 		assert.Equal(t, 1-i, s.Size())
 	}
 }
+
+func TestSetSize(t *testing.T) {
+	assert.Equal(t, 0, NewSet().Size())
+}
