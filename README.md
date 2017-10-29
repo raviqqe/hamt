@@ -12,6 +12,10 @@ Its immutable variant is adopted widely by functional programming languages
 like Scala and Clojure to implement immutable but memory-efficient associative
 arrays.
 
+## Documentation
+
+[GoDoc](https://godoc.org/github.com/raviqqe/hamt.go)
+
 ## References
 
 - [Ideal Hash Trees](https://infoscience.epfl.ch/record/64398/files/idealhashtrees.pdf)
