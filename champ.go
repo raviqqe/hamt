@@ -8,22 +8,22 @@ func NewChamp() Champ {
 	return Champ{}
 }
 
-// Insert inserts a key into a CHAMP.
+// Insert inserts a value into a CHAMP.
 func (champ Champ) Insert(x interface{}) Champ {
 	return champ
 }
 
-// Delete deletes a key from a CHAMP.
+// Delete deletes a value from a CHAMP.
 func (champ Champ) Delete(x interface{}) Champ {
 	return champ
 }
 
-// Find finds a key in a CHAMP.
+// Find finds a value in a CHAMP.
 func (champ Champ) Find(x interface{}) interface{} {
 	return nil
 }
 
-// FirstRest returns a first key and a CHAMP without it.
+// FirstRest returns a first value and a CHAMP without it.
 func (champ Champ) FirstRest() (interface{}, Champ) {
 	return nil, champ
 }
