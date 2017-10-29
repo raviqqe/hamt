@@ -12,17 +12,17 @@ func TestNewChamp(t *testing.T) {
 
 func TestChampInsert(t *testing.T) {
 	champ := NewChamp()
-	champ.Insert(123)
+	champ.Insert(HashableInt(42))
 }
 
 func TestChampDelete(t *testing.T) {
 	champ := NewChamp()
-	champ.Delete(123)
+	champ.Delete(HashableInt(42))
 }
 
 func TestChampFind(t *testing.T) {
 	champ := NewChamp()
-	champ.Find(123)
+	champ.Find(HashableInt(42))
 }
 
 func TestChampFirstRest(t *testing.T) {

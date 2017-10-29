@@ -9,22 +9,22 @@ func NewChamp() Champ {
 }
 
 // Insert inserts a value into a CHAMP.
-func (champ Champ) Insert(x interface{}) Champ {
+func (champ Champ) Insert(x Hashable) Champ {
 	return champ
 }
 
 // Delete deletes a value from a CHAMP.
-func (champ Champ) Delete(x interface{}) Champ {
+func (champ Champ) Delete(x Hashable) Champ {
 	return champ
 }
 
 // Find finds a value in a CHAMP.
-func (champ Champ) Find(x interface{}) interface{} {
+func (champ Champ) Find(x Hashable) Hashable {
 	return nil
 }
 
 // FirstRest returns a first value and a CHAMP without it.
-func (champ Champ) FirstRest() (interface{}, Champ) {
+func (champ Champ) FirstRest() (Hashable, Champ) {
 	return nil, champ
 }
 
