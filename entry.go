@@ -1,4 +1,4 @@
-package champ
+package hamt
 
 // Entry represents a hashable type.
 type Entry interface {

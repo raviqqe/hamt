@@ -1,6 +1,6 @@
-# champ.go
+# hamt.go
 
-CHAMP implementation in Go.
+HAMT implementation in Go.
 
 ## License
 

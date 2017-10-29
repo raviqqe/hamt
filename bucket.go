@@ -1,4 +1,4 @@
-package champ
+package hamt
 
 type bucket []Entry
 
@@ -6,26 +6,38 @@ func newBucket() bucket {
 	return nil
 }
 
-func (b bucket) Insert(k Entry) bucket {
-	return append(b, k)
+func (b bucket) Insert(e Entry) Node {
+	return append(b, e)
 }
 
-func (b bucket) Find(k Entry) Entry {
-	for _, k := range b {
-		if k.Equal(k) {
-			return k
+func (b bucket) Find(e Entry) Entry {
+	for _, f := range b {
+		if e.Equal(f) {
+			return f
 		}
 	}
 
 	return nil
 }
 
-func (b bucket) Delete(k Entry) bucket {
-	for i, k := range b {
-		if k.Equal(k) {
-			return append(b[:i], b[i:]...)
+func (b bucket) Delete(e Entry) Node {
+	for i, f := range b {
+		if e.Equal(f) {
+			return append(b[:i], b[i+1:]...)
 		}
 	}
 
 	return b
+}
+
+func (b bucket) FirstRest() (Entry, Node) {
+	if b.Size() == 0 {
+		return nil, b
+	}
+
+	return b[0], b[1:]
+}
+
+func (b bucket) Size() int {
+	return len(b)
 }

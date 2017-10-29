@@ -1,4 +1,4 @@
-package champ
+package hamt
 
 import (
 	"testing"
