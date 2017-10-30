@@ -12,6 +12,12 @@ Its immutable variant is adopted widely by functional programming languages
 like Scala and Clojure to implement immutable but memory-efficient associative
 arrays.
 
+## Installation
+
+```
+go get github.com/raviqqe/hamt.go
+```
+
 ## Documentation
 
 [GoDoc](https://godoc.org/github.com/raviqqe/hamt.go)
