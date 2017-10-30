@@ -17,7 +17,7 @@ func TestSetInsert(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 		e := EntryInt(rand.Int31())
 		s = s.Insert(e)
-		assert.Equal(t, e, s.Find(e))
+		assert.True(t, s.Include(e))
 	}
 }
 
@@ -33,19 +33,19 @@ func TestSetOperations(t *testing.T) {
 		if rand.Int()%2 == 0 {
 			r = s.Insert(e)
 
-			assert.Equal(t, e, r.Find(e))
+			assert.True(t, r.Include(e))
 
-			if s.Find(e) == nil {
-				assert.Equal(t, s.Size()+1, r.Size())
-			} else {
+			if s.Include(e) {
 				assert.Equal(t, s.Size(), r.Size())
+			} else {
+				assert.Equal(t, s.Size()+1, r.Size())
 			}
 		} else {
 			r = s.Delete(e)
 
-			assert.Equal(t, nil, r.Find(e))
+			assert.False(t, r.Include(e))
 
-			if s.Find(e) != nil {
+			if s.Include(e) {
 				assert.Equal(t, s.Size()-1, r.Size())
 			} else {
 				assert.Equal(t, s.Size(), r.Size())

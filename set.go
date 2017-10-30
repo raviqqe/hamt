@@ -34,9 +34,13 @@ func (s Set) Delete(e Entry) Set {
 	return Set{size, n.(hamt)}
 }
 
-// Find finds a value in a set.
-func (s Set) Find(e Entry) Entry {
+func (s Set) find(e Entry) Entry {
 	return s.hamt.Find(e)
+}
+
+// Include returns true if a given entry is included in a set, or false otherwise.
+func (s Set) Include(e Entry) bool {
+	return s.find(e) != nil
 }
 
 // FirstRest returns a value in a set and a rest of the set.
