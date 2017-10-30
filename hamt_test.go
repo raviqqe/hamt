@@ -110,6 +110,25 @@ func TestHamtFirstRest(t *testing.T) {
 	}
 }
 
+func TestHamtFirstRestWithManyEntries(t *testing.T) {
+	var h node = newHamt(0)
+
+	for i := 0; i < iterations; i++ {
+		h = h.Insert(entryInt(uint32(i)))
+	}
+
+	assert.Equal(t, iterations, h.Size())
+
+	for i := 0; i < iterations; i++ {
+		e, g := h.FirstRest()
+
+		assert.NotNil(t, e)
+		assert.Equal(t, h.Size()-1, g.Size())
+
+		h = g
+	}
+}
+
 func TestHamtSize(t *testing.T) {
 	assert.Equal(t, 0, newHamt(0).Size())
 }

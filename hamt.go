@@ -100,7 +100,10 @@ func (h hamt) FirstRest() (Entry, node) {
 	for i, c := range h.children {
 		if n, ok := c.(node); ok {
 			e, n := n.FirstRest()
-			return e, h.setChild(i, n)
+
+			if e != nil {
+				return e, h.setChild(i, n)
+			}
 		}
 	}
 
