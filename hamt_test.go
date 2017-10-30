@@ -131,6 +131,24 @@ func TestHamtFirstRestWithManyEntries(t *testing.T) {
 	assert.Equal(t, 0, h.Size())
 }
 
+func TestHamtState(t *testing.T) {
+	var h node = newHamt(0)
+
+	assert.Equal(t, empty, h.State())
+
+	h = h.Insert(entryInt(42))
+
+	assert.Equal(t, singleton, h.State())
+
+	h = h.Insert(entryInt(2049))
+
+	assert.Equal(t, more, h.State())
+
+	h = h.Insert(entryInt(0))
+
+	assert.Equal(t, more, h.State())
+}
+
 func TestHamtSize(t *testing.T) {
 	assert.Equal(t, 0, newHamt(0).Size())
 }
