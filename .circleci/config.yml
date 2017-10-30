@@ -12,6 +12,12 @@ jobs:
             apt -y update --fix-missing
             apt -y install rake
       - run:
+          name: Dependencies
+          command: rake deps
+      - run:
+          name: Lint
+          command: rake lint
+      - run:
           name: Build
           command: rake build
       - run:
