@@ -2,6 +2,7 @@
 
 [![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.go.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt.go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt.go?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt.go)
+[![License](https://img.shields.io/github/license/raviqqe/hamt.go.svg?style=flat-square)][unlicense]
 
 Immutable HAMT implementation in Go.
 
@@ -35,6 +36,8 @@ in [the CHAMP paper][champ].
 
 ## License
 
-[The Unlicense](https://unlicense.org/)
+[The Unlicense][unlicense]
 
 [champ]: https://michael.steindorfer.name/publications/oopsla15.pdf
+
+[unlicense]: https://unlicense.org/
