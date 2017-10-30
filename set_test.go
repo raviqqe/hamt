@@ -28,46 +28,46 @@ func TestSetOperations(t *testing.T) {
 		assert.Equal(t, s.hamt.Size(), s.Size())
 
 		e := EntryInt(rand.Int31() % 256)
-		var r Set
+		var ss Set
 
 		if rand.Int()%2 == 0 {
-			r = s.Insert(e)
+			ss = s.Insert(e)
 
-			assert.True(t, r.Include(e))
+			assert.True(t, ss.Include(e))
 
 			if s.Include(e) {
-				assert.Equal(t, s.Size(), r.Size())
+				assert.Equal(t, s.Size(), ss.Size())
 			} else {
-				assert.Equal(t, s.Size()+1, r.Size())
+				assert.Equal(t, s.Size()+1, ss.Size())
 			}
 		} else {
-			r = s.Delete(e)
+			ss = s.Delete(e)
 
-			assert.False(t, r.Include(e))
+			assert.False(t, ss.Include(e))
 
 			if s.Include(e) {
-				assert.Equal(t, s.Size()-1, r.Size())
+				assert.Equal(t, s.Size()-1, ss.Size())
 			} else {
-				assert.Equal(t, s.Size(), r.Size())
+				assert.Equal(t, s.Size(), ss.Size())
 			}
 		}
 
-		s = r
+		s = ss
 	}
 }
 
 func TestSetFirstRest(t *testing.T) {
 	s := NewSet()
-	e, r := s.FirstRest()
+	e, ss := s.FirstRest()
 
 	assert.Equal(t, nil, e)
-	assert.Equal(t, 0, r.Size())
+	assert.Equal(t, 0, ss.Size())
 
 	s = s.Insert(EntryInt(42))
-	e, r = s.FirstRest()
+	e, ss = s.FirstRest()
 
 	assert.Equal(t, EntryInt(42), e)
-	assert.Equal(t, 0, r.Size())
+	assert.Equal(t, 0, ss.Size())
 
 	s = s.Insert(EntryInt(2049))
 	size := s.Size()
