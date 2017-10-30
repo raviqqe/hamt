@@ -9,7 +9,7 @@ func newKeyValue(k Entry, v interface{}) keyValue {
 	return keyValue{k, v}
 }
 
-func (kv keyValue) Hash() int32 {
+func (kv keyValue) Hash() uint32 {
 	return kv.key.Hash()
 }
 

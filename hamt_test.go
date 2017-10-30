@@ -94,6 +94,16 @@ func TestHamtSize(t *testing.T) {
 	assert.Equal(t, 0, newHamt(0).Size())
 }
 
+func TestHamtCalculateIndex(t *testing.T) {
+	e := EntryInt(0xffffffff)
+
+	for i := 0; i < 6; i++ {
+		assert.Equal(t, 0x1f, newHamt(uint8(i)).calculateIndex(e))
+	}
+
+	assert.Equal(t, 3, newHamt(6).calculateIndex(e))
+}
+
 func TestArity(t *testing.T) {
 	assert.Equal(t, arity, int(1<<arityBits))
 }

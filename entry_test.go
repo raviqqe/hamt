@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type EntryInt int32
+type EntryInt uint32
 
-func (i EntryInt) Hash() int32 {
-	return int32(i)
+func (i EntryInt) Hash() uint32 {
+	return uint32(i)
 }
 
 func (i EntryInt) Equal(e Entry) bool {
@@ -23,15 +23,15 @@ func (i EntryInt) Equal(e Entry) bool {
 }
 
 type EntryKeyValue struct {
-	key   int32
+	key   uint32
 	value string
 }
 
-func NewEntryKeyValue(k int32, v string) EntryKeyValue {
+func NewEntryKeyValue(k uint32, v string) EntryKeyValue {
 	return EntryKeyValue{k, v}
 }
 
-func (kv EntryKeyValue) Hash() int32 {
+func (kv EntryKeyValue) Hash() uint32 {
 	return kv.key
 }
 
@@ -50,5 +50,5 @@ func TestEntry(t *testing.T) {
 }
 
 func TestEntryKey(t *testing.T) {
-	assert.Equal(t, int32(42), Entry(EntryInt(42)).Hash())
+	assert.Equal(t, uint32(42), Entry(EntryInt(42)).Hash())
 }
