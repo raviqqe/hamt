@@ -127,6 +127,8 @@ func TestHamtFirstRestWithManyEntries(t *testing.T) {
 
 		h = g
 	}
+
+	assert.Equal(t, 0, h.Size())
 }
 
 func TestHamtSize(t *testing.T) {
