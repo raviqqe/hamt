@@ -1,7 +1,7 @@
 # hamt.go
 
-[![CircleCI](https://circleci.com/gh/raviqqe/hamt.go.svg?style=svg)](https://circleci.com/gh/raviqqe/hamt.go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt.go)](https://goreportcard.com/report/github.com/raviqqe/hamt.go)
+[![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.go.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt.go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt.go?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt.go)
 
 Immutable HAMT implementation in Go.
 
