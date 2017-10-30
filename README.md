@@ -24,7 +24,7 @@ go get github.com/raviqqe/hamt.go
 
 ## Technical notes
 
-The implementation canonicalizes tree structures of HAMT by eliminating
+The implementation canonicalizes tree structures of HAMTs by eliminating
 intermediate nodes during delete operations as described
 in [the CHAMP paper][champ].
 
