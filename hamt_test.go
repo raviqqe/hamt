@@ -62,13 +62,24 @@ func TestHamtDelete(t *testing.T) {
 func TestHamtDeleteWithManyEntries(t *testing.T) {
 	var h node = newHamt(0)
 
-	for i := 0; i < 10000; i++ {
-		h = h.Insert(entryInt(int32(i)))
+	for i := 0; i < iterations; i++ {
+		h = h.Insert(entryInt(uint32(i)))
 	}
 
-	h, _ = h.Delete(entryInt(42))
+	assert.Equal(t, iterations, h.Size())
 
-	assert.Equal(t, nil, h.Find(entryInt(42)))
+	for i := 0; i < iterations; i++ {
+		e := entryInt(uint32(i))
+		g, ok := h.Delete(e)
+
+		assert.True(t, ok)
+		assert.Nil(t, g.Find(e))
+		assert.Equal(t, h.Size()-1, g.Size())
+
+		h = g
+	}
+
+	assert.Equal(t, 0, h.Size())
 }
 
 func TestHamtFind(t *testing.T) {
