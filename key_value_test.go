@@ -19,7 +19,7 @@ func TestKeyValueAsEntry(t *testing.T) {
 }
 
 func TestKeyValueHash(t *testing.T) {
-	newKeyValue(entryInt(42), "value").Hash()
+	assert.Equal(t, uint32(42), newKeyValue(entryInt(42), "value").Hash())
 }
 
 func TestKeyValueEqual(t *testing.T) {
