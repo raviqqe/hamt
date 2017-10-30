@@ -5,7 +5,7 @@
 
 Immutable HAMT implementation in Go.
 
-[HAMT](https://en.wikipedia.org/wiki/Hash_array_mapped_trie)
+[Hash-Array Mapped Trie (HAMT)](https://en.wikipedia.org/wiki/Hash_array_mapped_trie)
 is a data structure popular as associative arrays (a.k.a. maps or dictionaries)
 or sets.
 Its immutable variant is adopted widely by functional programming languages
