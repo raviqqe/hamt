@@ -2,6 +2,6 @@ package hamt
 
 // Entry represents an entry in a HAMT.
 type Entry interface {
-	Key() int32
+	Hash() int32
 	Equal(Entry) bool
 }

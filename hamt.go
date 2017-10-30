@@ -147,7 +147,7 @@ func (h hamt) Size() int {
 }
 
 func (h hamt) calculateIndex(e Entry) int {
-	return int((e.Key() >> uint(arityBits*h.level)) % arity)
+	return int((e.Hash() >> uint(arityBits*h.level)) % arity)
 }
 
 func (h hamt) setChild(i int, c interface{}) hamt {

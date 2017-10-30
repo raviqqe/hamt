@@ -8,7 +8,7 @@ import (
 
 type EntryInt int32
 
-func (i EntryInt) Key() int32 {
+func (i EntryInt) Hash() int32 {
 	return int32(i)
 }
 
@@ -31,7 +31,7 @@ func NewEntryKeyValue(k int32, v string) EntryKeyValue {
 	return EntryKeyValue{k, v}
 }
 
-func (kv EntryKeyValue) Key() int32 {
+func (kv EntryKeyValue) Hash() int32 {
 	return kv.key
 }
 
@@ -50,5 +50,5 @@ func TestEntry(t *testing.T) {
 }
 
 func TestEntryKey(t *testing.T) {
-	assert.Equal(t, int32(42), Entry(EntryInt(42)).Key())
+	assert.Equal(t, int32(42), Entry(EntryInt(42)).Hash())
 }
