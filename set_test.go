@@ -15,7 +15,7 @@ func TestSetInsert(t *testing.T) {
 	s := NewSet()
 
 	for i := 0; i < iterations; i++ {
-		e := EntryInt(rand.Int31())
+		e := entryInt(rand.Int31())
 		s = s.Insert(e)
 		assert.True(t, s.Include(e))
 	}
@@ -27,7 +27,7 @@ func TestSetOperations(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 		assert.Equal(t, s.hamt.Size(), s.Size())
 
-		e := EntryInt(rand.Int31() % 256)
+		e := entryInt(rand.Int31() % 256)
 		var ss Set
 
 		if rand.Int()%2 == 0 {
@@ -63,13 +63,13 @@ func TestSetFirstRest(t *testing.T) {
 	assert.Equal(t, nil, e)
 	assert.Equal(t, 0, ss.Size())
 
-	s = s.Insert(EntryInt(42))
+	s = s.Insert(entryInt(42))
 	e, ss = s.FirstRest()
 
-	assert.Equal(t, EntryInt(42), e)
+	assert.Equal(t, entryInt(42), e)
 	assert.Equal(t, 0, ss.Size())
 
-	s = s.Insert(EntryInt(2049))
+	s = s.Insert(entryInt(2049))
 	size := s.Size()
 
 	for i := 0; i < size; i++ {
@@ -91,7 +91,7 @@ func BenchmarkSetInsert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < iterations; i++ {
-			s = s.Insert(EntryInt(i))
+			s = s.Insert(entryInt(i))
 		}
 	}
 }
@@ -103,7 +103,7 @@ func BenchmarkSetSize(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < iterations; i++ {
-			s = s.Insert(EntryInt(i))
+			s = s.Insert(entryInt(i))
 			b.Log(s.Size())
 		}
 	}

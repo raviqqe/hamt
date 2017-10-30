@@ -13,27 +13,27 @@ func TestNewBucket(t *testing.T) {
 }
 
 func TestBucketInsert(t *testing.T) {
-	b := newBucket().Insert(EntryInt(42))
+	b := newBucket().Insert(entryInt(42))
 
 	assert.Equal(t, 1, b.Size())
-	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+	assert.Equal(t, entryInt(42), b.Find(entryInt(42)))
 
-	b = b.Insert(EntryInt(42))
+	b = b.Insert(entryInt(42))
 
 	assert.Equal(t, 1, b.Size())
-	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
+	assert.Equal(t, entryInt(42), b.Find(entryInt(42)))
 
-	b = b.Insert(EntryInt(2049))
-
-	assert.Equal(t, 2, b.Size())
-	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
-	assert.Equal(t, EntryInt(2049), b.Find(EntryInt(2049)))
-
-	b = b.Insert(EntryInt(2049))
+	b = b.Insert(entryInt(2049))
 
 	assert.Equal(t, 2, b.Size())
-	assert.Equal(t, EntryInt(42), b.Find(EntryInt(42)))
-	assert.Equal(t, EntryInt(2049), b.Find(EntryInt(2049)))
+	assert.Equal(t, entryInt(42), b.Find(entryInt(42)))
+	assert.Equal(t, entryInt(2049), b.Find(entryInt(2049)))
+
+	b = b.Insert(entryInt(2049))
+
+	assert.Equal(t, 2, b.Size())
+	assert.Equal(t, entryInt(42), b.Find(entryInt(42)))
+	assert.Equal(t, entryInt(2049), b.Find(entryInt(2049)))
 }
 
 func TestBucketInsertAsMap(t *testing.T) {
@@ -51,15 +51,15 @@ func TestBucketInsertAsMap(t *testing.T) {
 }
 
 func TestBucketDelete(t *testing.T) {
-	b, changed := newBucket().Insert(EntryInt(42)).Delete(EntryInt(42))
+	b, changed := newBucket().Insert(entryInt(42)).Delete(entryInt(42))
 
 	assert.True(t, changed)
 	assert.Equal(t, 0, b.Size())
-	assert.Equal(t, nil, b.Find(EntryInt(42)))
+	assert.Equal(t, nil, b.Find(entryInt(42)))
 }
 
 func TestBucketFind(t *testing.T) {
-	assert.Equal(t, nil, newBucket().Find(EntryInt(42)))
+	assert.Equal(t, nil, newBucket().Find(entryInt(42)))
 }
 
 func TestBucketFirstRest(t *testing.T) {
@@ -68,13 +68,13 @@ func TestBucketFirstRest(t *testing.T) {
 	assert.Equal(t, nil, e)
 	assert.Equal(t, 0, b.Size())
 
-	b = b.Insert(EntryInt(42))
+	b = b.Insert(entryInt(42))
 	e, r := b.FirstRest()
 
-	assert.Equal(t, EntryInt(42), e)
+	assert.Equal(t, entryInt(42), e)
 	assert.Equal(t, 0, r.Size())
 
-	b = b.Insert(EntryInt(2049))
+	b = b.Insert(entryInt(2049))
 	s := b.Size()
 
 	for i := 0; i < s; i++ {
@@ -90,15 +90,15 @@ func TestBucketState(t *testing.T) {
 
 	assert.Equal(t, empty, b.State())
 
-	b = b.Insert(EntryInt(42))
+	b = b.Insert(entryInt(42))
 
 	assert.Equal(t, singleton, b.State())
 
-	b = b.Insert(EntryInt(2049))
+	b = b.Insert(entryInt(2049))
 
 	assert.Equal(t, more, b.State())
 
-	b = b.Insert(EntryInt(0))
+	b = b.Insert(entryInt(0))
 
 	assert.Equal(t, more, b.State())
 }
