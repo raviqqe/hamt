@@ -36,7 +36,7 @@ func TestBucketInsert(t *testing.T) {
 	assert.Equal(t, EntryInt(2049), b.Find(EntryInt(2049)))
 }
 
-func TestBucketInsertAsDictionary(t *testing.T) {
+func TestBucketInsertAsMap(t *testing.T) {
 	kv := NewEntryKeyValue(0, "foo")
 	b := newBucket().Insert(kv)
 

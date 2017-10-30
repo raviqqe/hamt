@@ -23,7 +23,7 @@ func TestHamtInsert(t *testing.T) {
 	assert.Equal(t, EntryInt(2049), h.Find(EntryInt(2049)).(EntryInt))
 }
 
-func TestHamtInsertAsDictionary(t *testing.T) {
+func TestHamtInsertAsMap(t *testing.T) {
 	kv := NewEntryKeyValue(0, "foo")
 	h := newHamt(0).Insert(kv)
 
