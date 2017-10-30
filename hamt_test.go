@@ -24,13 +24,13 @@ func TestHamtInsert(t *testing.T) {
 }
 
 func TestHamtInsertAsMap(t *testing.T) {
-	kv := NewEntryKeyValue(0, "foo")
+	kv := newTestKeyValue(0, "foo")
 	h := newHamt(0).Insert(kv)
 
 	assert.Equal(t, 1, h.Size())
 	assert.EqualValues(t, kv, h.Find(kv))
 
-	new := NewEntryKeyValue(0, "bar")
+	new := newTestKeyValue(0, "bar")
 	h = h.Insert(new)
 
 	assert.Equal(t, 1, h.Size())

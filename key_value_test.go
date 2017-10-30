@@ -6,6 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func newTestKeyValue(k uint32, v string) Entry {
+	return newKeyValue(EntryInt(k), v)
+}
+
 func TestNewKeyValue(t *testing.T) {
 	newKeyValue(EntryInt(42), "value")
 }

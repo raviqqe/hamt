@@ -37,13 +37,13 @@ func TestBucketInsert(t *testing.T) {
 }
 
 func TestBucketInsertAsMap(t *testing.T) {
-	kv := NewEntryKeyValue(0, "foo")
+	kv := newTestKeyValue(0, "foo")
 	b := newBucket().Insert(kv)
 
 	assert.Equal(t, 1, b.Size())
 	assert.EqualValues(t, kv, b.Find(kv))
 
-	new := NewEntryKeyValue(0, "bar")
+	new := newTestKeyValue(0, "bar")
 	b = b.Insert(new)
 
 	assert.Equal(t, 1, b.Size())
