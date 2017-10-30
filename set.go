@@ -3,7 +3,7 @@ package hamt
 // Set represents a set.
 type Set struct {
 	size int
-	hamt
+	hamt hamt
 }
 
 // NewSet creates a new set.
@@ -15,7 +15,7 @@ func NewSet() Set {
 func (s Set) Insert(e Entry) Set {
 	size := s.size
 
-	if s.Find(e) == nil {
+	if s.find(e) == nil {
 		size++
 	}
 
