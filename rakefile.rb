@@ -1,12 +1,57 @@
 task :deps do
-  sh 'go get github.com/stretchr/testify/assert'
+  sh %w[
+    go get -u
+    github.com/client9/misspell/cmd/misspell
+    github.com/golang/lint/golint
+    github.com/kisielk/errcheck
+    github.com/opennota/check/cmd/aligncheck
+    github.com/opennota/check/cmd/structcheck
+    github.com/opennota/check/cmd/varcheck
+    golang.org/x/tools/cmd/goimports
+    mvdan.cc/interfacer
+    honnef.co/go/tools/...
+  ].join ' '
+
+  sh 'go get -d -t ./...'
+
+  sh 'gem install rubocop'
 end
 
-task build: :deps do
+task :lint do
+  [
+    'go vet',
+    'golint',
+    'gosimple',
+    'unused',
+    'staticcheck',
+    'interfacer',
+    'errcheck',
+    'aligncheck',
+    'structcheck',
+    'varcheck'
+  ].each do |command|
+    sh "#{command} ./..."
+  end
+
+  sh 'misspell -error .'
+end
+
+task :format do
+  sh 'go fix ./...'
+  sh 'go fmt ./...'
+
+  Dir.glob '**/*.go' do |file|
+    sh "goimports -w #{file}"
+  end
+
+  sh 'rubocop -a'
+end
+
+task :build do
   sh 'go build'
 end
 
-task test: :deps do
+task :test do
   sh 'go test -cover'
 end
 
