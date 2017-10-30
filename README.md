@@ -1,6 +1,7 @@
 # hamt.go
 
 [![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.go.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt.go)
+[![Codecov](https://img.shields.io/codecov/c/github/raviqqe/hamt.go.svg?style=flat-square)](https://codecov.io/gh/raviqqe/hamt.go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt.go?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt.go)
 [![License](https://img.shields.io/github/license/raviqqe/hamt.go.svg?style=flat-square)][unlicense]
 
