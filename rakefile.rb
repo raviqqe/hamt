@@ -14,7 +14,7 @@ task :deps do
 
   sh 'go get -d -t ./...'
 
-  sh 'gem install rubocop'
+  sh 'gem install rake rubocop'
 end
 
 task :lint do
