@@ -10,8 +10,8 @@ Immutable HAMT implementation in Go.
 is a data structure popular as an associative array (a.k.a. map or dictionary)
 or set.
 Its immutable variant is adopted widely by functional programming languages
-like Scala and Clojure to implement immutable but memory-efficient associative
-arrays.
+like Scala and Clojure to implement immutable and memory-efficient associative
+arrays and sets.
 
 ## Installation
 
