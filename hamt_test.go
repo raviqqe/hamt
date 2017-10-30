@@ -37,6 +37,15 @@ func TestHamtInsertAsMap(t *testing.T) {
 	assert.EqualValues(t, new, h.Find(kv))
 }
 
+func TestHamtInsertWithBucketCreation(t *testing.T) {
+	h := newHamt(7).Insert(entryInt(0)).Insert(entryInt(0x80000000))
+
+	b, ok := h.(hamt).children[0].(bucket)
+
+	assert.True(t, ok)
+	assert.Equal(t, 2, b.Size())
+}
+
 func TestHamtDelete(t *testing.T) {
 	h := newHamt(0).Insert(entryInt(42))
 
