@@ -55,6 +55,6 @@ task :test do
   sh 'go test -cover'
 end
 
-task bench: :deps do
+task :bench do
   sh 'go test -bench .'
 end
