@@ -58,6 +58,19 @@ func TestBucketDelete(t *testing.T) {
 	assert.Equal(t, nil, b.Find(entryInt(42)))
 }
 
+func TestBucketDeleteNonExistentEntries(t *testing.T) {
+	b, changed := newBucket().Delete(entryInt(42))
+
+	assert.False(t, changed)
+	assert.Equal(t, 0, b.Size())
+
+	b, changed = newBucket().Insert(entryInt(42)).Delete(entryInt(2049))
+
+	assert.False(t, changed)
+	assert.Equal(t, 1, b.Size())
+	assert.Equal(t, entryInt(42), b.Find(entryInt(42)))
+}
+
 func TestBucketFind(t *testing.T) {
 	assert.Equal(t, nil, newBucket().Find(entryInt(42)))
 }
