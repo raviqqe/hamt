@@ -2,10 +2,10 @@ package hamt
 
 import "testing"
 
-func TestHamtAsnode(t *testing.T) {
+func TestHamtAsNode(t *testing.T) {
 	t.Log(node(newHamt(0)))
 }
 
-func TestBucketAsnode(t *testing.T) {
+func TestBucketAsNode(t *testing.T) {
 	t.Log(node(newBucket()))
 }
