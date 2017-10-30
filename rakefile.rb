@@ -52,7 +52,7 @@ task :build do
 end
 
 task :test do
-  sh 'go test -cover'
+  sh 'go test -coverprofile coverage.txt'
 end
 
 task :bench do

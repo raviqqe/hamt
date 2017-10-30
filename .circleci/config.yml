@@ -22,7 +22,9 @@ jobs:
           command: rake build
       - run:
           name: Test
-          command: rake test
+          command: |
+            rake test
+            curl -sSL https://codecov.io/bash | bash
       - run:
           name: Benchmark
           command: rake bench
