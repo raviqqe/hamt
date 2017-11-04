@@ -14,8 +14,8 @@ func (kv keyValue) Hash() uint32 {
 }
 
 func (kv keyValue) Equal(e Entry) bool {
-	if kv, ok := e.(keyValue); ok {
-		e = kv.key
+	if k, ok := e.(keyValue); ok {
+		e = k.key
 	}
 
 	return kv.key.Equal(e)
