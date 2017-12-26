@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: golang
-    working_directory: /go/src/github.com/raivqqe/hamt.go
+    working_directory: /go/src/github.com/raivqqe/hamt
     steps:
       - checkout
       - run:

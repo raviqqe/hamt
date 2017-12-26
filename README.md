@@ -1,9 +1,9 @@
-# hamt.go
+# hamt
 
-[![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.go.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt.go)
-[![Codecov](https://img.shields.io/codecov/c/github/raviqqe/hamt.go.svg?style=flat-square)](https://codecov.io/gh/raviqqe/hamt.go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt.go?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt.go)
-[![License](https://img.shields.io/github/license/raviqqe/hamt.go.svg?style=flat-square)][unlicense]
+[![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt)
+[![Codecov](https://img.shields.io/codecov/c/github/raviqqe/hamt.svg?style=flat-square)](https://codecov.io/gh/raviqqe/hamt)
+[![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt)
+[![License](https://img.shields.io/github/license/raviqqe/hamt.svg?style=flat-square)][unlicense]
 
 Immutable and Memory Efficient Maps and Sets in Go.
 
@@ -22,12 +22,12 @@ arrays and sets.
 ## Installation
 
 ```
-go get github.com/raviqqe/hamt.go
+go get github.com/raviqqe/hamt
 ```
 
 ## Documentation
 
-[GoDoc](https://godoc.org/github.com/raviqqe/hamt.go)
+[GoDoc](https://godoc.org/github.com/raviqqe/hamt)
 
 ## Technical notes
 
