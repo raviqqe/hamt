@@ -61,7 +61,7 @@ func (h hamt) Delete(e Entry) (node, bool) {
 
 		switch n.State() {
 		case empty:
-			c = nil
+			panic("Invariant error: trees must be normalized.")
 		case singleton:
 			e, _ := n.FirstRest()
 			c = e

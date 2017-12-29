@@ -82,6 +82,27 @@ func TestHamtDeleteWithManyEntries(t *testing.T) {
 	assert.Equal(t, 0, h.Size())
 }
 
+func TestHamtDeletePanicWithUnnormalizedTree(t *testing.T) {
+	defer func() {
+		assert.NotNil(t, recover())
+	}()
+
+	e := entryInt(42)
+	h := newHamt(0)
+
+	for i := range h.children {
+		g := hamt{1, [32]interface{}{}}
+
+		if i == h.calculateIndex(e) {
+			g.children[g.calculateIndex(e)] = e
+		}
+
+		h.children[i] = g
+	}
+
+	h.Delete(e)
+}
+
 func TestHamtFind(t *testing.T) {
 	assert.Equal(t, nil, newHamt(0).Find(entryInt(42)))
 }
