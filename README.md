@@ -13,7 +13,7 @@ All operations of the collections, such as insert and delete, are immutable and
 create new ones keeping original ones unmodified.
 
 [Hash-Array Mapped Trie (HAMT)](https://en.wikipedia.org/wiki/Hash_array_mapped_trie)
-is a data structure popular as an associative array (a.k.a. map or dictionary)
+is a data structure popular as a map (a.k.a. associative array or dictionary)
 or set.
 Its immutable variant is adopted widely by functional programming languages
 like Scala and Clojure to implement immutable and memory-efficient associative
