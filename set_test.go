@@ -80,6 +80,32 @@ func TestSetFirstRest(t *testing.T) {
 	}
 }
 
+func TestSetMerge(t *testing.T) {
+	for _, ss := range [][3]Set{
+		{
+			NewSet(),
+			NewSet(),
+			NewSet(),
+		},
+		{
+			NewSet().Insert(entryInt(1)),
+			NewSet(),
+			NewSet().Insert(entryInt(1)),
+		},
+		{
+			NewSet(),
+			NewSet().Insert(entryInt(1)),
+			NewSet().Insert(entryInt(1)),
+		},
+		{
+			NewSet().Insert(entryInt(2)),
+			NewSet().Insert(entryInt(1)),
+			NewSet().Insert(entryInt(1)).Insert(entryInt(2))},
+	} {
+		assert.Equal(t, ss[2], ss[0].Merge(ss[1]))
+	}
+}
+
 func TestSetSize(t *testing.T) {
 	assert.Equal(t, 0, NewSet().Size())
 }

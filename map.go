@@ -53,6 +53,11 @@ func (m Map) FirstRest() (Entry, interface{}, Map) {
 	return kv.key, kv.value, m
 }
 
+// Merge merges 2 maps into one.
+func (m Map) Merge(n Map) Map {
+	return Map{m.set.Merge(n.set)}
+}
+
 // Size returns a size of a map.
 func (m Map) Size() int {
 	return m.set.Size()

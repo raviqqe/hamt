@@ -56,6 +56,17 @@ func (s Set) FirstRest() (Entry, Set) {
 	return e, Set{size, n.(hamt)}
 }
 
+// Merge merges 2 sets into one.
+func (s Set) Merge(t Set) Set {
+	for t.Size() != 0 {
+		var e Entry
+		e, t = t.FirstRest()
+		s = s.Insert(e)
+	}
+
+	return s
+}
+
 // Size returns a size of a set.
 func (s Set) Size() int {
 	return s.size

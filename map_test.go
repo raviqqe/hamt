@@ -81,6 +81,32 @@ func TestMapFirstRest(t *testing.T) {
 	}
 }
 
+func TestMapMerge(t *testing.T) {
+	for _, ms := range [][3]Map{
+		{
+			NewMap(),
+			NewMap(),
+			NewMap(),
+		},
+		{
+			NewMap().Insert(entryInt(1), "foo"),
+			NewMap(),
+			NewMap().Insert(entryInt(1), "foo"),
+		},
+		{
+			NewMap(),
+			NewMap().Insert(entryInt(1), "foo"),
+			NewMap().Insert(entryInt(1), "foo"),
+		},
+		{
+			NewMap().Insert(entryInt(2), "foo"),
+			NewMap().Insert(entryInt(1), "foo"),
+			NewMap().Insert(entryInt(1), "foo").Insert(entryInt(2), "foo")},
+	} {
+		assert.Equal(t, ms[2], ms[0].Merge(ms[1]))
+	}
+}
+
 func TestMapSize(t *testing.T) {
 	assert.Equal(t, 0, NewMap().Size())
 }
