@@ -10,7 +10,7 @@ jobs:
           name: Setup
           command: |
             apt -y update --fix-missing
-            apt -y install rake
+            apt -y install rake ruby-dev
       - run:
           name: Dependencies
           command: rake deps
