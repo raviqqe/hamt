@@ -47,6 +47,15 @@ func (b bucket) FirstRest() (Entry, node) {
 	return b[0], b[1:]
 }
 
+func (b bucket) ForEach(cb func(Entry) error) error {
+	for _, e := range b {
+		if err := cb(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (b bucket) State() nodeState {
 	switch len(b) {
 	case 0:

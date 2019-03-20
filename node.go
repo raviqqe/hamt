@@ -14,6 +14,7 @@ type node interface {
 	Delete(Entry) (node, bool)
 	Find(Entry) Entry
 	FirstRest() (Entry, node)
+	ForEach(func(Entry) error) error
 	State() nodeState
 	Size() int // for debugging
 }

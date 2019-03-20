@@ -152,6 +152,55 @@ func TestHamtFirstRestWithManyEntries(t *testing.T) {
 	assert.Equal(t, 0, h.Size())
 }
 
+func TestHamtForEach(t *testing.T) {
+	var n node = newHamt(0)
+	err := n.ForEach(func(entry Entry) error {
+		assert.Fail(t, "for-each callback called on empty hamt")
+		return nil
+	})
+	assert.NoError(t, err)
+
+	n = n.Insert(entryInt(42))
+	entries := make([]entryInt, 0)
+	err = n.ForEach(func(entry Entry) error {
+		entries = append(entries, entry.(entryInt))
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []entryInt{42}, entries)
+
+	n = n.Insert(entryInt(2049))
+	entries = make([]entryInt, 0)
+	err = n.ForEach(func(entry Entry) error {
+		entries = append(entries, entry.(entryInt))
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.ElementsMatch(t, []entryInt{42, 2049}, entries)
+}
+
+func TestHamtForEachWithManyEntries(t *testing.T) {
+	var h node = newHamt(0)
+
+	want := make([]entryInt, 0)
+	for i := 0; i < iterations; i++ {
+		e := entryInt(uint32(i))
+		h = h.Insert(e)
+		want = append(want, e)
+	}
+
+	assert.Equal(t, iterations, h.Size())
+
+	entries := make([]entryInt, 0)
+	err := h.ForEach(func(entry Entry) error {
+		entries = append(entries, entry.(entryInt))
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.Len(t, entries, iterations)
+	assert.ElementsMatch(t, want, entries)
+}
+
 func TestHamtState(t *testing.T) {
 	var h node = newHamt(0)
 
@@ -214,6 +263,67 @@ func BenchmarkHamtDelete(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < iterations; i++ {
 			h, _ = h.Delete(entryInt(i))
+		}
+	}
+}
+
+func BenchmarkHamtFirstRestIteration(b *testing.B) {
+	var h node = newHamt(0)
+	for i := 0; i < iterations; i++ {
+		h = h.Insert(entryInt(i))
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hh := h
+		for hh.Size() > 0 {
+			_, hh = hh.FirstRest()
+		}
+	}
+}
+
+func BenchmarkHamtForEachIteration(b *testing.B) {
+	var h node = newHamt(0)
+	for i := 0; i < iterations; i++ {
+		h = h.Insert(entryInt(i))
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		h.ForEach(func(entry Entry) error {
+			return nil
+		})
+	}
+}
+
+func BenchmarkBuiltinMapForEach(b *testing.B) {
+	m := make(map[entryInt]struct{})
+	for i := 0; i < iterations; i++ {
+		m[entryInt(i)] = struct{}{}
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for e := range m {
+			_=e
+		}
+	}
+}
+
+func BenchmarkBuiltinSliceForEach(b *testing.B) {
+	m := make([]entryInt, 0)
+	for i := 0; i < iterations; i++ {
+		m = append(m, entryInt(i))
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for _, e := range m {
+			_=e
 		}
 	}
 }
