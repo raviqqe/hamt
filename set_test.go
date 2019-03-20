@@ -80,6 +80,33 @@ func TestSetFirstRest(t *testing.T) {
 	}
 }
 
+func TestSetForEach(t *testing.T) {
+	s := NewSet()
+	err := s.ForEach(func(entry Entry) error {
+		assert.Fail(t, "for-each callback called on empty set")
+		return nil
+	})
+	assert.NoError(t, err)
+
+	s = s.Insert(entryInt(42))
+	entries := make([]entryInt, 0)
+	err = s.ForEach(func(entry Entry) error {
+		entries = append(entries, entry.(entryInt))
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, []entryInt{42}, entries)
+
+	s = s.Insert(entryInt(2049))
+	entries = make([]entryInt, 0)
+	err = s.ForEach(func(entry Entry) error {
+		entries = append(entries, entry.(entryInt))
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.ElementsMatch(t, []entryInt{42, 2049}, entries)
+}
+
 func TestSetMerge(t *testing.T) {
 	for _, ss := range [][3]Set{
 		{
