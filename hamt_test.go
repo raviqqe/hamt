@@ -292,7 +292,7 @@ func BenchmarkHamtForEachIteration(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		h.ForEach(func(entry Entry) error {
+		_ = h.ForEach(func(entry Entry) error {
 			return nil
 		})
 	}
@@ -308,7 +308,7 @@ func BenchmarkBuiltinMapForEach(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for e := range m {
-			_=e
+			_ = e
 		}
 	}
 }
@@ -323,7 +323,7 @@ func BenchmarkBuiltinSliceForEach(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		for _, e := range m {
-			_=e
+			_ = e
 		}
 	}
 }
