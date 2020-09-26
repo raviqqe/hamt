@@ -1,6 +1,5 @@
 coverage.txt
+.*
+!.gitignore
+!.github
 *.iml
-/.tmp
-.DS_Store
-.vscode/
-.idea/
