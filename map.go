@@ -53,6 +53,13 @@ func (m Map) FirstRest() (Entry, interface{}, Map) {
 	return kv.key, kv.value, m
 }
 
+func (m Map) ForEach(cb func(Entry, interface{}) error) error {
+	return m.set.ForEach(func(e Entry) error {
+		kv := e.(keyValue)
+		return cb(kv.key, kv.value)
+	})
+}
+
 // Merge merges 2 maps into one.
 func (m Map) Merge(n Map) Map {
 	return Map{m.set.Merge(n.set)}

@@ -81,6 +81,55 @@ func TestMapFirstRest(t *testing.T) {
 	}
 }
 
+func TestMapForEach(t *testing.T) {
+	m := NewMap()
+	err := m.ForEach(func(key Entry, val interface{}) error {
+		assert.Fail(t, "for-each callback called on empty set")
+		return nil
+	})
+	assert.NoError(t, err)
+
+	m = m.Insert(entryInt(42), "value")
+	kvs := make([]keyValue, 0)
+	want := []keyValue{
+		{
+			key:   entryInt(42),
+			value: "value",
+		},
+	}
+	err = m.ForEach(func(key Entry, val interface{}) error {
+		kvs = append(kvs, keyValue{
+			key:   key,
+			value: val,
+		})
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, want, kvs)
+
+	m = m.Insert(entryInt(2049), "value2")
+	kvs = make([]keyValue, 0)
+	want = []keyValue{
+		{
+			key:   entryInt(42),
+			value: "value",
+		},
+		{
+			key:   entryInt(2049),
+			value: "value2",
+		},
+	}
+	err = m.ForEach(func(key Entry, val interface{}) error {
+		kvs = append(kvs, keyValue{
+			key:   key,
+			value: val,
+		})
+		return nil
+	})
+	assert.NoError(t, err)
+	assert.ElementsMatch(t, want, kvs)
+}
+
 func TestMapMerge(t *testing.T) {
 	for _, ms := range [][3]Map{
 		{

@@ -1,1 +1,6 @@
 coverage.txt
+*.iml
+/.tmp
+.DS_Store
+.vscode/
+.idea/

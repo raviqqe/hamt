@@ -111,6 +111,24 @@ func (h hamt) FirstRest() (Entry, node) {
 	return nil, h // There is no entry inside.
 }
 
+func (h hamt) ForEach(cb func(Entry) error) error {
+	for _, child := range h.children {
+		switch x := child.(type) {
+		case nil:
+			continue
+		case Entry:
+			if err := cb(x); err != nil {
+				return err
+			}
+		case node:
+			if err := x.ForEach(cb); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // State returns a state of a HAMT.
 func (h hamt) State() nodeState {
 	es := 0

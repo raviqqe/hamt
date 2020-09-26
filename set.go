@@ -56,6 +56,10 @@ func (s Set) FirstRest() (Entry, Set) {
 	return e, Set{size, n.(hamt)}
 }
 
+func (s Set) ForEach(cb func(Entry) error) error {
+	return s.hamt.ForEach(cb)
+}
+
 // Merge merges 2 sets into one.
 func (s Set) Merge(t Set) Set {
 	for t.Size() != 0 {
