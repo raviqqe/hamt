@@ -1,6 +1,6 @@
 # hamt
 
-[![Circle CI](https://img.shields.io/circleci/project/github/raviqqe/hamt.svg?style=flat-square)](https://circleci.com/gh/raviqqe/hamt)
+[![GitHub Action](https://img.shields.io/github/workflow/status/raviqqe/hamt/test?style=flat-square)](https://github.com/raviqqe/hamt/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/raviqqe/hamt.svg?style=flat-square)](https://codecov.io/gh/raviqqe/hamt)
 [![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt)
 [![License](https://img.shields.io/github/license/raviqqe/hamt.svg?style=flat-square)][unlicense]
@@ -45,5 +45,4 @@ in [the CHAMP paper][champ].
 [The Unlicense][unlicense]
 
 [champ]: https://michael.steindorfer.name/publications/oopsla15.pdf
-
 [unlicense]: https://unlicense.org/
