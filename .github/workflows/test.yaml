@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: go build
-      - run: go run github.com/golangci/golangci-lint/cmd/golangci-lint run
+      - uses: golangci/golangci-lint-action@v2
       - run: go test -covermode atomic -coverprofile coverage.txt
       - uses: codecov/codecov-action@v1
       - run: go test -bench .
