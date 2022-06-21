@@ -2,4 +2,4 @@ module github.com/raviqqe/hamt
 
 go 1.15
 
-require github.com/stretchr/testify v1.7.2
+require github.com/stretchr/testify v1.7.4
