@@ -8,11 +8,11 @@ import (
 )
 
 func TestNewSet(t *testing.T) {
-	NewSet()
+	NewSet[entryInt]()
 }
 
 func TestSetInsert(t *testing.T) {
-	s := NewSet()
+	s := NewSet[entryInt]()
 
 	for i := 0; i < iterations; i++ {
 		e := entryInt(rand.Int31())
@@ -22,13 +22,13 @@ func TestSetInsert(t *testing.T) {
 }
 
 func TestSetOperations(t *testing.T) {
-	s := NewSet()
+	s := NewSet[entryInt]()
 
 	for i := 0; i < iterations; i++ {
 		assert.Equal(t, s.hamt.Size(), s.Size())
 
 		e := entryInt(rand.Int31() % 256)
-		var ss Set
+		var ss Set[entryInt]
 
 		if rand.Int()%2 == 0 {
 			ss = s.Insert(e)
@@ -57,16 +57,16 @@ func TestSetOperations(t *testing.T) {
 }
 
 func TestSetFirstRest(t *testing.T) {
-	s := NewSet()
+	s := NewSet[entryInt]()
 	e, ss := s.FirstRest()
 
-	assert.Equal(t, nil, e)
+	assert.Nil(t, e)
 	assert.Equal(t, 0, ss.Size())
 
 	s = s.Insert(entryInt(42))
 	e, ss = s.FirstRest()
 
-	assert.Equal(t, entryInt(42), e)
+	assert.Equal(t, entryInt(42), *e)
 	assert.Equal(t, 0, ss.Size())
 
 	s = s.Insert(entryInt(2049))
@@ -81,8 +81,8 @@ func TestSetFirstRest(t *testing.T) {
 }
 
 func TestSetForEach(t *testing.T) {
-	s := NewSet()
-	err := s.ForEach(func(entry Entry) error {
+	s := NewSet[entryInt]()
+	err := s.ForEach(func(entry entryInt) error {
 		assert.Fail(t, "for-each callback called on empty set")
 		return nil
 	})
@@ -90,8 +90,8 @@ func TestSetForEach(t *testing.T) {
 
 	s = s.Insert(entryInt(42))
 	entries := make([]entryInt, 0)
-	err = s.ForEach(func(entry Entry) error {
-		entries = append(entries, entry.(entryInt))
+	err = s.ForEach(func(entry entryInt) error {
+		entries = append(entries, entry)
 		return nil
 	})
 	assert.NoError(t, err)
@@ -99,8 +99,8 @@ func TestSetForEach(t *testing.T) {
 
 	s = s.Insert(entryInt(2049))
 	entries = make([]entryInt, 0)
-	err = s.ForEach(func(entry Entry) error {
-		entries = append(entries, entry.(entryInt))
+	err = s.ForEach(func(entry entryInt) error {
+		entries = append(entries, entry)
 		return nil
 	})
 	assert.NoError(t, err)
@@ -108,37 +108,37 @@ func TestSetForEach(t *testing.T) {
 }
 
 func TestSetMerge(t *testing.T) {
-	for _, ss := range [][3]Set{
+	for _, ss := range [][3]Set[entryInt]{
 		{
-			NewSet(),
-			NewSet(),
-			NewSet(),
+			NewSet[entryInt](),
+			NewSet[entryInt](),
+			NewSet[entryInt](),
 		},
 		{
-			NewSet().Insert(entryInt(1)),
-			NewSet(),
-			NewSet().Insert(entryInt(1)),
+			NewSet[entryInt]().Insert(entryInt(1)),
+			NewSet[entryInt](),
+			NewSet[entryInt]().Insert(entryInt(1)),
 		},
 		{
-			NewSet(),
-			NewSet().Insert(entryInt(1)),
-			NewSet().Insert(entryInt(1)),
+			NewSet[entryInt](),
+			NewSet[entryInt]().Insert(entryInt(1)),
+			NewSet[entryInt]().Insert(entryInt(1)),
 		},
 		{
-			NewSet().Insert(entryInt(2)),
-			NewSet().Insert(entryInt(1)),
-			NewSet().Insert(entryInt(1)).Insert(entryInt(2))},
+			NewSet[entryInt]().Insert(entryInt(2)),
+			NewSet[entryInt]().Insert(entryInt(1)),
+			NewSet[entryInt]().Insert(entryInt(1)).Insert(entryInt(2))},
 	} {
 		assert.Equal(t, ss[2], ss[0].Merge(ss[1]))
 	}
 }
 
 func TestSetSize(t *testing.T) {
-	assert.Equal(t, 0, NewSet().Size())
+	assert.Equal(t, 0, NewSet[entryInt]().Size())
 }
 
 func BenchmarkSetInsert(b *testing.B) {
-	s := NewSet()
+	s := NewSet[entryInt]()
 
 	b.ResetTimer()
 
@@ -150,7 +150,7 @@ func BenchmarkSetInsert(b *testing.B) {
 }
 
 func BenchmarkSetSize(b *testing.B) {
-	s := NewSet()
+	s := NewSet[entryInt]()
 
 	b.ResetTimer()
 

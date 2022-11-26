@@ -12,20 +12,14 @@ func (i entryInt) Hash() uint32 {
 	return uint32(i)
 }
 
-func (i entryInt) Equal(e Entry) bool {
-	j, ok := e.(entryInt)
-
-	if !ok {
-		return false
-	}
-
+func (i entryInt) Equal(j entryInt) bool {
 	return i == j
 }
 
 func TestEntry(t *testing.T) {
-	t.Log(Entry(entryInt(42)))
+	t.Log(Entry[entryInt](entryInt(42)))
 }
 
 func TestEntryKey(t *testing.T) {
-	assert.Equal(t, uint32(42), Entry(entryInt(42)).Hash())
+	assert.Equal(t, uint32(42), entryInt(42).Hash())
 }

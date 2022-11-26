@@ -4,25 +4,25 @@ const arityBits = 5
 const arity = 32
 
 // hamt represents a HAMT data structure.
-type hamt struct {
+type hamt[T Entry[T]] struct {
 	level    uint8
-	children [arity]interface{}
+	children [arity]any
 }
 
 // newHamt creates a new HAMT.
-func newHamt(level uint8) hamt {
-	return hamt{level: level}
+func newHamt[T Entry[T]](level uint8) hamt[T] {
+	return hamt[T]{level: level}
 }
 
 // Insert inserts a value into a HAMT.
-func (h hamt) Insert(e Entry) node {
+func (h hamt[T]) Insert(e T) node[T] {
 	i := h.calculateIndex(e)
 	var c interface{}
 
 	switch x := h.children[i].(type) {
 	case nil:
 		c = e
-	case Entry:
+	case T:
 		if x.Equal(e) {
 			return h.setChild(i, e)
 		}
@@ -30,11 +30,11 @@ func (h hamt) Insert(e Entry) node {
 		l := h.level + 1
 
 		if l*arityBits > arity {
-			c = newBucket().Insert(x).Insert(e)
+			c = newBucket[T]().Insert(x).Insert(e)
 		} else {
-			c = newHamt(l).Insert(x).Insert(e)
+			c = newHamt[T](l).Insert(x).Insert(e)
 		}
-	case node:
+	case node[T]:
 		c = x.Insert(e)
 	}
 
@@ -42,15 +42,15 @@ func (h hamt) Insert(e Entry) node {
 }
 
 // Delete deletes a value from a HAMT.
-func (h hamt) Delete(e Entry) (node, bool) {
+func (h hamt[T]) Delete(e T) (node[T], bool) {
 	i := h.calculateIndex(e)
 
 	switch x := h.children[i].(type) {
-	case Entry:
+	case T:
 		if x.Equal(e) {
 			return h.setChild(i, nil), true
 		}
-	case node:
+	case node[T]:
 		n, b := x.Delete(e)
 
 		if !b {
@@ -64,7 +64,7 @@ func (h hamt) Delete(e Entry) (node, bool) {
 			panic("Invariant error: trees must be normalized.")
 		case singleton:
 			e, _ := n.FirstRest()
-			c = e
+			c = *e
 		}
 
 		return h.setChild(i, c), true
@@ -74,32 +74,33 @@ func (h hamt) Delete(e Entry) (node, bool) {
 }
 
 // Find finds a value in a HAMT.
-func (h hamt) Find(e Entry) Entry {
+func (h hamt[T]) Find(e T) *T {
 	switch x := h.children[h.calculateIndex(e)].(type) {
-	case Entry:
+	case T:
 		if x.Equal(e) {
-			return x
+			return &x
 		}
-	case node:
+	case node[T]:
 		return x.Find(e)
 	}
 
 	return nil
 }
 
-// FirstRest returns a first value and a HAMT without it.
-func (h hamt) FirstRest() (Entry, node) {
+// FirstRest returns a pointer to the first value and a HAMT without it.
+// If h is empty, the pointer will be nil.
+func (h hamt[T]) FirstRest() (*T, node[T]) {
 	// Traverse entries and sub nodes separately for cache locality.
 	for _, c := range h.children {
-		if e, ok := c.(Entry); ok {
+		if e, ok := c.(T); ok {
 			h, _ := h.Delete(e)
-			return e, h
+			return &e, h
 		}
 	}
 
 	for i, c := range h.children {
-		if n, ok := c.(node); ok {
-			var e Entry
+		if n, ok := c.(node[T]); ok {
+			var e *T
 			e, n = n.FirstRest()
 
 			if e != nil {
@@ -111,16 +112,16 @@ func (h hamt) FirstRest() (Entry, node) {
 	return nil, h // There is no entry inside.
 }
 
-func (h hamt) ForEach(cb func(Entry) error) error {
+func (h hamt[T]) ForEach(cb func(T) error) error {
 	for _, child := range h.children {
 		switch x := child.(type) {
 		case nil:
 			continue
-		case Entry:
+		case T:
 			if err := cb(x); err != nil {
 				return err
 			}
-		case node:
+		case node[T]:
 			if err := x.ForEach(cb); err != nil {
 				return err
 			}
@@ -130,15 +131,15 @@ func (h hamt) ForEach(cb func(Entry) error) error {
 }
 
 // State returns a state of a HAMT.
-func (h hamt) State() nodeState {
+func (h hamt[T]) State() nodeState {
 	es := 0
 	ns := 0
 
 	for _, c := range h.children {
 		switch c.(type) {
-		case Entry:
+		case T:
 			es++
-		case node:
+		case node[T]:
 			ns++
 		}
 	}
@@ -153,14 +154,14 @@ func (h hamt) State() nodeState {
 }
 
 // Size returns a size of a HAMT.
-func (h hamt) Size() int {
+func (h hamt[T]) Size() int {
 	s := 0
 
 	for _, c := range h.children {
 		switch x := c.(type) {
-		case Entry:
+		case T:
 			s++
-		case node:
+		case node[T]:
 			s += x.Size()
 		}
 	}
@@ -168,11 +169,11 @@ func (h hamt) Size() int {
 	return s
 }
 
-func (h hamt) calculateIndex(e Entry) int {
+func (h hamt[T]) calculateIndex(e T) int {
 	return int((e.Hash() >> uint(arityBits*h.level)) % arity)
 }
 
-func (h hamt) setChild(i int, c interface{}) hamt {
+func (h hamt[T]) setChild(i int, c any) hamt[T] {
 	g := h
 	g.children[i] = c
 	return g

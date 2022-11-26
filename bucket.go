@@ -1,15 +1,15 @@
 package hamt
 
-type bucket []Entry
+type bucket[T Entry[T]] []T
 
-func newBucket() bucket {
-	return bucket(nil)
+func newBucket[T Entry[T]]() bucket[T] {
+	return bucket[T](nil)
 }
 
-func (b bucket) Insert(e Entry) node {
+func (b bucket[T]) Insert(e T) node[T] {
 	for i, f := range b {
 		if e.Equal(f) {
-			new := make(bucket, len(b))
+			new := make(bucket[T], len(b))
 			copy(new, b)
 			new[i] = e
 			return new
@@ -19,17 +19,17 @@ func (b bucket) Insert(e Entry) node {
 	return append(b, e)
 }
 
-func (b bucket) Find(e Entry) Entry {
+func (b bucket[T]) Find(e T) *T {
 	for _, f := range b {
 		if e.Equal(f) {
-			return f
+			return &f
 		}
 	}
 
 	return nil
 }
 
-func (b bucket) Delete(e Entry) (node, bool) {
+func (b bucket[T]) Delete(e T) (node[T], bool) {
 	for i, f := range b {
 		if e.Equal(f) {
 			return append(b[:i], b[i+1:]...), true
@@ -39,15 +39,15 @@ func (b bucket) Delete(e Entry) (node, bool) {
 	return b, false
 }
 
-func (b bucket) FirstRest() (Entry, node) {
+func (b bucket[T]) FirstRest() (*T, node[T]) {
 	if len(b) == 0 {
 		return nil, b
 	}
 
-	return b[0], b[1:]
+	return &b[0], b[1:]
 }
 
-func (b bucket) ForEach(cb func(Entry) error) error {
+func (b bucket[T]) ForEach(cb func(T) error) error {
 	for _, e := range b {
 		if err := cb(e); err != nil {
 			return err
@@ -56,7 +56,7 @@ func (b bucket) ForEach(cb func(Entry) error) error {
 	return nil
 }
 
-func (b bucket) State() nodeState {
+func (b bucket[T]) State() nodeState {
 	switch len(b) {
 	case 0:
 		return empty
@@ -67,6 +67,6 @@ func (b bucket) State() nodeState {
 	return more
 }
 
-func (b bucket) Size() int {
+func (b bucket[T]) Size() int {
 	return len(b)
 }
