@@ -7,60 +7,60 @@ import (
 )
 
 func TestNewHamt(t *testing.T) {
-	newHamt(0)
+	newHamt[entryInt](0)
 }
 
 func TestHamtInsert(t *testing.T) {
-	h := newHamt(0).Insert(entryInt(42))
+	h := newHamt[entryInt](0).Insert(entryInt(42))
 
 	assert.Equal(t, 1, h.Size())
-	assert.Equal(t, entryInt(42), h.Find(entryInt(42)).(entryInt))
+	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
 
 	h = h.Insert(entryInt(2049))
 
 	assert.Equal(t, 2, h.Size())
-	assert.Equal(t, entryInt(42), h.Find(entryInt(42)).(entryInt))
-	assert.Equal(t, entryInt(2049), h.Find(entryInt(2049)).(entryInt))
+	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
+	assert.Equal(t, entryInt(2049), *h.Find(entryInt(2049)))
 }
 
 func TestHamtInsertAsMap(t *testing.T) {
 	kv := newTestKeyValue(0, "foo")
-	h := newHamt(0).Insert(kv)
+	h := newHamt[keyValue[entryInt, string]](0).Insert(kv)
 
 	assert.Equal(t, 1, h.Size())
-	assert.EqualValues(t, kv, h.Find(kv))
+	assert.EqualValues(t, kv, *h.Find(kv))
 
 	new := newTestKeyValue(0, "bar")
 	h = h.Insert(new)
 
 	assert.Equal(t, 1, h.Size())
-	assert.EqualValues(t, new, h.Find(kv))
+	assert.EqualValues(t, new, *h.Find(kv))
 }
 
 func TestHamtInsertWithBucketCreation(t *testing.T) {
-	h := newHamt(7).Insert(entryInt(0)).Insert(entryInt(0x80000000))
+	h := newHamt[entryInt](7).Insert(entryInt(0)).Insert(entryInt(0x80000000))
 
-	b, ok := h.(hamt).children[0].(bucket)
+	b, ok := h.(hamt[entryInt]).children[0].(bucket[entryInt])
 
 	assert.True(t, ok)
 	assert.Equal(t, 2, b.Size())
 }
 
 func TestHamtDelete(t *testing.T) {
-	h := newHamt(0).Insert(entryInt(42))
+	h := newHamt[entryInt](0).Insert(entryInt(42))
 
 	assert.Equal(t, 1, h.Size())
-	assert.Equal(t, entryInt(42), h.Find(entryInt(42)).(entryInt))
+	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
 
 	h, changed := h.Delete(entryInt(42))
 
 	assert.True(t, changed)
 	assert.Equal(t, 0, h.Size())
-	assert.Equal(t, nil, h.Find(entryInt(42)))
+	assert.Nil(t, h.Find(entryInt(42)))
 }
 
 func TestHamtDeleteWithManyEntries(t *testing.T) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	for i := 0; i < iterations; i++ {
 		h = h.Insert(entryInt(uint32(i)))
@@ -88,10 +88,10 @@ func TestHamtDeletePanicWithUnnormalizedTree(t *testing.T) {
 	}()
 
 	e := entryInt(42)
-	h := newHamt(0)
+	h := newHamt[entryInt](0)
 
 	for i := range h.children {
-		g := hamt{1, [32]interface{}{}}
+		g := hamt[entryInt]{1, [32]any{}}
 
 		if i == h.calculateIndex(e) {
 			g.children[g.calculateIndex(e)] = e
@@ -104,20 +104,20 @@ func TestHamtDeletePanicWithUnnormalizedTree(t *testing.T) {
 }
 
 func TestHamtFind(t *testing.T) {
-	assert.Equal(t, nil, newHamt(0).Find(entryInt(42)))
+	assert.Nil(t, newHamt[entryInt](0).Find(entryInt(42)))
 }
 
 func TestHamtFirstRest(t *testing.T) {
-	var n node = newHamt(0)
+	var n node[entryInt] = newHamt[entryInt](0)
 	e, m := n.FirstRest()
 
-	assert.Equal(t, nil, e)
+	assert.Nil(t, e)
 	assert.Equal(t, 0, m.Size())
 
 	n = n.Insert(entryInt(42))
 	e, m = n.FirstRest()
 
-	assert.Equal(t, entryInt(42), e)
+	assert.Equal(t, entryInt(42), *e)
 	assert.Equal(t, 0, m.Size())
 
 	n = n.Insert(entryInt(2049))
@@ -132,7 +132,7 @@ func TestHamtFirstRest(t *testing.T) {
 }
 
 func TestHamtFirstRestWithManyEntries(t *testing.T) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	for i := 0; i < iterations; i++ {
 		h = h.Insert(entryInt(uint32(i)))
@@ -153,8 +153,8 @@ func TestHamtFirstRestWithManyEntries(t *testing.T) {
 }
 
 func TestHamtForEach(t *testing.T) {
-	var n node = newHamt(0)
-	err := n.ForEach(func(entry Entry) error {
+	var n node[entryInt] = newHamt[entryInt](0)
+	err := n.ForEach(func(entry entryInt) error {
 		assert.Fail(t, "for-each callback called on empty hamt")
 		return nil
 	})
@@ -162,8 +162,8 @@ func TestHamtForEach(t *testing.T) {
 
 	n = n.Insert(entryInt(42))
 	entries := make([]entryInt, 0)
-	err = n.ForEach(func(entry Entry) error {
-		entries = append(entries, entry.(entryInt))
+	err = n.ForEach(func(entry entryInt) error {
+		entries = append(entries, entry)
 		return nil
 	})
 	assert.NoError(t, err)
@@ -171,8 +171,8 @@ func TestHamtForEach(t *testing.T) {
 
 	n = n.Insert(entryInt(2049))
 	entries = make([]entryInt, 0)
-	err = n.ForEach(func(entry Entry) error {
-		entries = append(entries, entry.(entryInt))
+	err = n.ForEach(func(entry entryInt) error {
+		entries = append(entries, entry)
 		return nil
 	})
 	assert.NoError(t, err)
@@ -180,7 +180,7 @@ func TestHamtForEach(t *testing.T) {
 }
 
 func TestHamtForEachWithManyEntries(t *testing.T) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	want := make([]entryInt, 0)
 	for i := 0; i < iterations; i++ {
@@ -192,8 +192,8 @@ func TestHamtForEachWithManyEntries(t *testing.T) {
 	assert.Equal(t, iterations, h.Size())
 
 	entries := make([]entryInt, 0)
-	err := h.ForEach(func(entry Entry) error {
-		entries = append(entries, entry.(entryInt))
+	err := h.ForEach(func(entry entryInt) error {
+		entries = append(entries, entry)
 		return nil
 	})
 	assert.NoError(t, err)
@@ -202,7 +202,7 @@ func TestHamtForEachWithManyEntries(t *testing.T) {
 }
 
 func TestHamtState(t *testing.T) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	assert.Equal(t, empty, h.State())
 
@@ -220,17 +220,17 @@ func TestHamtState(t *testing.T) {
 }
 
 func TestHamtSize(t *testing.T) {
-	assert.Equal(t, 0, newHamt(0).Size())
+	assert.Equal(t, 0, newHamt[entryInt](0).Size())
 }
 
 func TestHamtCalculateIndex(t *testing.T) {
 	e := entryInt(0xffffffff)
 
 	for i := 0; i < 6; i++ {
-		assert.Equal(t, 0x1f, newHamt(uint8(i)).calculateIndex(e))
+		assert.Equal(t, 0x1f, newHamt[entryInt](uint8(i)).calculateIndex(e))
 	}
 
-	assert.Equal(t, 3, newHamt(6).calculateIndex(e))
+	assert.Equal(t, 3, newHamt[entryInt](6).calculateIndex(e))
 }
 
 func TestArity(t *testing.T) {
@@ -238,7 +238,7 @@ func TestArity(t *testing.T) {
 }
 
 func BenchmarkHamtInsert(b *testing.B) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	b.ResetTimer()
 
@@ -250,7 +250,7 @@ func BenchmarkHamtInsert(b *testing.B) {
 }
 
 func BenchmarkHamtDelete(b *testing.B) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < iterations; i++ {
@@ -268,7 +268,7 @@ func BenchmarkHamtDelete(b *testing.B) {
 }
 
 func BenchmarkHamtFirstRestIteration(b *testing.B) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 	for i := 0; i < iterations; i++ {
 		h = h.Insert(entryInt(i))
 	}
@@ -284,7 +284,7 @@ func BenchmarkHamtFirstRestIteration(b *testing.B) {
 }
 
 func BenchmarkHamtForEachIteration(b *testing.B) {
-	var h node = newHamt(0)
+	var h node[entryInt] = newHamt[entryInt](0)
 	for i := 0; i < iterations; i++ {
 		h = h.Insert(entryInt(i))
 	}
@@ -292,7 +292,7 @@ func BenchmarkHamtForEachIteration(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = h.ForEach(func(entry Entry) error {
+		_ = h.ForEach(func(entry entryInt) error {
 			return nil
 		})
 	}

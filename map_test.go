@@ -8,30 +8,30 @@ import (
 )
 
 func TestNewMap(t *testing.T) {
-	NewMap()
+	NewMap[entryInt, string]()
 }
 
 func TestMapInsert(t *testing.T) {
-	m := NewMap()
+	m := NewMap[entryInt, string]()
 
 	for i := 0; i < iterations; i++ {
 		e := entryInt(rand.Int31())
 		m = m.Insert(e, "value")
-		assert.Equal(t, "value", m.Find(e))
+		assert.Equal(t, "value", *m.Find(e))
 	}
 }
 
 func TestMapOperations(t *testing.T) {
-	m := NewMap()
+	m := NewMap[entryInt, string]()
 
 	for i := 0; i < iterations; i++ {
 		k := entryInt(rand.Int31() % 256)
-		var mm Map
+		var mm Map[entryInt, string]
 
 		if rand.Int()%2 == 0 {
 			mm = m.Insert(k, "value")
 
-			assert.Equal(t, "value", mm.Find(k))
+			assert.Equal(t, "value", *mm.Find(k))
 
 			if m.Include(k) {
 				assert.Equal(t, m.Size(), mm.Size())
@@ -41,7 +41,7 @@ func TestMapOperations(t *testing.T) {
 		} else {
 			mm = m.Delete(k)
 
-			assert.Equal(t, nil, mm.Find(k))
+			assert.Nil(t, mm.Find(k))
 
 			if m.Include(k) {
 				assert.Equal(t, m.Size()-1, mm.Size())
@@ -55,18 +55,18 @@ func TestMapOperations(t *testing.T) {
 }
 
 func TestMapFirstRest(t *testing.T) {
-	m := NewMap()
+	m := NewMap[entryInt, string]()
 	k, v, mm := m.FirstRest()
 
-	assert.Equal(t, nil, k)
-	assert.Equal(t, nil, v)
+	assert.Nil(t, k)
+	assert.Nil(t, v)
 	assert.Equal(t, 0, mm.Size())
 
 	m = m.Insert(entryInt(42), "value")
 	k, v, mm = m.FirstRest()
 
-	assert.Equal(t, entryInt(42), k)
-	assert.Equal(t, "value", v)
+	assert.Equal(t, entryInt(42), *k)
+	assert.Equal(t, "value", *v)
 	assert.Equal(t, 0, mm.Size())
 
 	m = m.Insert(entryInt(2049), "value")
@@ -75,30 +75,30 @@ func TestMapFirstRest(t *testing.T) {
 	for i := 0; i < s; i++ {
 		k, v, m = m.FirstRest()
 
-		assert.NotEqual(t, nil, k)
-		assert.Equal(t, "value", v)
+		assert.NotNil(t, k)
+		assert.Equal(t, "value", *v)
 		assert.Equal(t, 1-i, m.Size())
 	}
 }
 
 func TestMapForEach(t *testing.T) {
-	m := NewMap()
-	err := m.ForEach(func(key Entry, val interface{}) error {
+	m := NewMap[entryInt, string]()
+	err := m.ForEach(func(key entryInt, val string) error {
 		assert.Fail(t, "for-each callback called on empty set")
 		return nil
 	})
 	assert.NoError(t, err)
 
 	m = m.Insert(entryInt(42), "value")
-	kvs := make([]keyValue, 0)
-	want := []keyValue{
+	kvs := make([]keyValue[entryInt, string], 0)
+	want := []keyValue[entryInt, string]{
 		{
 			key:   entryInt(42),
 			value: "value",
 		},
 	}
-	err = m.ForEach(func(key Entry, val interface{}) error {
-		kvs = append(kvs, keyValue{
+	err = m.ForEach(func(key entryInt, val string) error {
+		kvs = append(kvs, keyValue[entryInt, string]{
 			key:   key,
 			value: val,
 		})
@@ -108,8 +108,8 @@ func TestMapForEach(t *testing.T) {
 	assert.Equal(t, want, kvs)
 
 	m = m.Insert(entryInt(2049), "value2")
-	kvs = make([]keyValue, 0)
-	want = []keyValue{
+	kvs = make([]keyValue[entryInt, string], 0)
+	want = []keyValue[entryInt, string]{
 		{
 			key:   entryInt(42),
 			value: "value",
@@ -119,8 +119,8 @@ func TestMapForEach(t *testing.T) {
 			value: "value2",
 		},
 	}
-	err = m.ForEach(func(key Entry, val interface{}) error {
-		kvs = append(kvs, keyValue{
+	err = m.ForEach(func(key entryInt, val string) error {
+		kvs = append(kvs, keyValue[entryInt, string]{
 			key:   key,
 			value: val,
 		})
@@ -131,31 +131,31 @@ func TestMapForEach(t *testing.T) {
 }
 
 func TestMapMerge(t *testing.T) {
-	for _, ms := range [][3]Map{
+	for _, ms := range [][3]Map[entryInt, string]{
 		{
-			NewMap(),
-			NewMap(),
-			NewMap(),
+			NewMap[entryInt, string](),
+			NewMap[entryInt, string](),
+			NewMap[entryInt, string](),
 		},
 		{
-			NewMap().Insert(entryInt(1), "foo"),
-			NewMap(),
-			NewMap().Insert(entryInt(1), "foo"),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo"),
+			NewMap[entryInt, string](),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo"),
 		},
 		{
-			NewMap(),
-			NewMap().Insert(entryInt(1), "foo"),
-			NewMap().Insert(entryInt(1), "foo"),
+			NewMap[entryInt, string](),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo"),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo"),
 		},
 		{
-			NewMap().Insert(entryInt(2), "foo"),
-			NewMap().Insert(entryInt(1), "foo"),
-			NewMap().Insert(entryInt(1), "foo").Insert(entryInt(2), "foo")},
+			NewMap[entryInt, string]().Insert(entryInt(2), "foo"),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo"),
+			NewMap[entryInt, string]().Insert(entryInt(1), "foo").Insert(entryInt(2), "foo")},
 	} {
 		assert.Equal(t, ms[2], ms[0].Merge(ms[1]))
 	}
 }
 
 func TestMapSize(t *testing.T) {
-	assert.Equal(t, 0, NewMap().Size())
+	assert.Equal(t, 0, NewMap[entryInt, string]().Size())
 }

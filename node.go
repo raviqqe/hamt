@@ -9,12 +9,12 @@ const (
 )
 
 // node represents a node in a HAMT.
-type node interface {
-	Insert(Entry) node
-	Delete(Entry) (node, bool)
-	Find(Entry) Entry
-	FirstRest() (Entry, node)
-	ForEach(func(Entry) error) error
+type node[T Entry[T]] interface {
+	Insert(T) node[T]
+	Delete(T) (node[T], bool)
+	Find(T) *T
+	FirstRest() (*T, node[T])
+	ForEach(func(T) error) error
 	State() nodeState
 	Size() int // for debugging
 }

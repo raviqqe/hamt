@@ -1,22 +1,18 @@
 package hamt
 
-type keyValue struct {
-	key   Entry
-	value interface{}
+type keyValue[K Entry[K], V any] struct {
+	key   K
+	value V
 }
 
-func newKeyValue(k Entry, v interface{}) keyValue {
-	return keyValue{k, v}
+func newKeyValue[K Entry[K], V any](k K, v V) keyValue[K, V] {
+	return keyValue[K, V]{k, v}
 }
 
-func (kv keyValue) Hash() uint32 {
+func (kv keyValue[K, V]) Hash() uint32 {
 	return kv.key.Hash()
 }
 
-func (kv keyValue) Equal(e Entry) bool {
-	if k, ok := e.(keyValue); ok {
-		e = k.key
-	}
-
-	return kv.key.Equal(e)
+func (kv keyValue[K, V]) Equal(e keyValue[K, V]) bool {
+	return kv.key.Equal(e.key)
 }
