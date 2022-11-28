@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt)
 [![License](https://img.shields.io/github/license/raviqqe/hamt.svg?style=flat-square)][unlicense]
 
-> For the old `any`-based API, refer to the `main` branch.
+> For the old `any`-based API, refer to [the `main` branch](https://github.com/raviqqe/hamt/tree/main).
 
 Immutable and Memory Efficient Maps and Sets in Go.
 
