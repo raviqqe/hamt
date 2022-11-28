@@ -1,4 +1,4 @@
-module github.com/raviqqe/hamt
+module github.com/raviqqe/hamt/v2
 
 go 1.18
 
