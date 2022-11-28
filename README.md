@@ -5,6 +5,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/raviqqe/hamt?style=flat-square)](https://goreportcard.com/report/github.com/raviqqe/hamt)
 [![License](https://img.shields.io/github/license/raviqqe/hamt.svg?style=flat-square)][unlicense]
 
+> For the old `any`-based API, refer to the `main` branch.
+
 Immutable and Memory Efficient Maps and Sets in Go.
 
 This package `hamt` provides immutable collection types of maps (associative arrays)
@@ -22,12 +24,12 @@ arrays and sets.
 ## Installation
 
 ```
-go get github.com/raviqqe/hamt
+go get github.com/raviqqe/hamt/v2
 ```
 
 ## Documentation
 
-[GoDoc](https://godoc.org/github.com/raviqqe/hamt)
+[GoDoc](https://godoc.org/github.com/raviqqe/hamt/v2)
 
 ## Technical notes
 
