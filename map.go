@@ -22,36 +22,27 @@ func (m Map[K, V]) Delete(k K) Map[K, V] {
 }
 
 // Find finds a value corresponding to a given key from a map.
-// It returns nil if no value is found.
-func (m Map[K, V]) Find(k K) *V {
+// If no value is found ok will be false
+func (m Map[K, V]) Find(k K) (_ V, ok bool) {
 	var zero V
-	e := m.set.find(newKeyValue(k, zero))
-
-	if e == nil {
-		return nil
-	}
-
-	return &e.value
+	e, ok := m.set.find(newKeyValue(k, zero))
+	return e.value, ok
 }
 
 // Include returns true if a key-value pair corresponding with a given key is
 // included in a map, or false otherwise.
 func (m Map[K, V]) Include(k K) bool {
-	return m.Find(k) != nil
+	_, ok := m.Find(k)
+	return ok
 }
 
 // FirstRest returns a key-value pair in a map and a rest of the map.
 // This method is useful for iteration.
-// The key and value would be nil if the map is empty.
-func (m Map[K, V]) FirstRest() (*K, *V, Map[K, V]) {
-	e, s := m.set.FirstRest()
+// If the map is empty, ok will be false.
+func (m Map[K, V]) FirstRest() (_ K, _ V, _ Map[K, V], ok bool) {
+	e, s, ok := m.set.FirstRest()
 	m = Map[K, V]{s}
-
-	if e == nil {
-		return nil, nil, m
-	}
-
-	return &e.key, &e.value, m
+	return e.key, e.value, m, ok
 }
 
 func (m Map[K, V]) ForEach(cb func(K, V) error) error {

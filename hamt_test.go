@@ -14,13 +14,19 @@ func TestHamtInsert(t *testing.T) {
 	h := newHamt[entryInt](0).Insert(entryInt(42))
 
 	assert.Equal(t, 1, h.Size())
-	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
+	v, ok := h.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
 
 	h = h.Insert(entryInt(2049))
 
 	assert.Equal(t, 2, h.Size())
-	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
-	assert.Equal(t, entryInt(2049), *h.Find(entryInt(2049)))
+	v, ok = h.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
+	v, ok = h.Find(entryInt(2049))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(2049), v)
 }
 
 func TestHamtInsertAsMap(t *testing.T) {
@@ -28,13 +34,17 @@ func TestHamtInsertAsMap(t *testing.T) {
 	h := newHamt[keyValue[entryInt, string]](0).Insert(kv)
 
 	assert.Equal(t, 1, h.Size())
-	assert.EqualValues(t, kv, *h.Find(kv))
+	v, ok := h.Find(kv)
+	assert.True(t, ok)
+	assert.EqualValues(t, kv, v)
 
 	new := newTestKeyValue(0, "bar")
 	h = h.Insert(new)
 
 	assert.Equal(t, 1, h.Size())
-	assert.EqualValues(t, new, *h.Find(kv))
+	v, ok = h.Find(kv)
+	assert.True(t, ok)
+	assert.EqualValues(t, new, v)
 }
 
 func TestHamtInsertWithBucketCreation(t *testing.T) {
@@ -50,13 +60,16 @@ func TestHamtDelete(t *testing.T) {
 	h := newHamt[entryInt](0).Insert(entryInt(42))
 
 	assert.Equal(t, 1, h.Size())
-	assert.Equal(t, entryInt(42), *h.Find(entryInt(42)))
+	v, ok := h.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
 
 	h, changed := h.Delete(entryInt(42))
 
 	assert.True(t, changed)
 	assert.Equal(t, 0, h.Size())
-	assert.Nil(t, h.Find(entryInt(42)))
+	_, ok = h.Find(entryInt(42))
+	assert.False(t, ok)
 }
 
 func TestHamtDeleteWithManyEntries(t *testing.T) {
@@ -73,7 +86,8 @@ func TestHamtDeleteWithManyEntries(t *testing.T) {
 		g, ok := h.Delete(e)
 
 		assert.True(t, ok)
-		assert.Nil(t, g.Find(e))
+		_, ok = g.Find(e)
+		assert.False(t, ok)
 		assert.Equal(t, h.Size()-1, g.Size())
 
 		h = g
@@ -104,29 +118,31 @@ func TestHamtDeletePanicWithUnnormalizedTree(t *testing.T) {
 }
 
 func TestHamtFind(t *testing.T) {
-	assert.Nil(t, newHamt[entryInt](0).Find(entryInt(42)))
+	_, ok := newHamt[entryInt](0).Find(entryInt(42))
+	assert.False(t, ok)
 }
 
 func TestHamtFirstRest(t *testing.T) {
 	var n node[entryInt] = newHamt[entryInt](0)
-	e, m := n.FirstRest()
+	_, m, ok := n.FirstRest()
 
-	assert.Nil(t, e)
+	assert.False(t, ok)
 	assert.Equal(t, 0, m.Size())
 
 	n = n.Insert(entryInt(42))
-	e, m = n.FirstRest()
+	e, m, ok := n.FirstRest()
 
-	assert.Equal(t, entryInt(42), *e)
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), e)
 	assert.Equal(t, 0, m.Size())
 
 	n = n.Insert(entryInt(2049))
 	s := n.Size()
 
 	for i := 0; i < s; i++ {
-		e, n = n.FirstRest()
+		_, n, ok = n.FirstRest()
 
-		assert.NotEqual(t, nil, e)
+		assert.True(t, ok)
 		assert.Equal(t, 1-i, n.Size())
 	}
 }
@@ -141,9 +157,9 @@ func TestHamtFirstRestWithManyEntries(t *testing.T) {
 	assert.Equal(t, iterations, h.Size())
 
 	for i := 0; i < iterations; i++ {
-		e, g := h.FirstRest()
+		_, g, ok := h.FirstRest()
 
-		assert.NotNil(t, e)
+		assert.True(t, ok)
 		assert.Equal(t, h.Size()-1, g.Size())
 
 		h = g
@@ -278,7 +294,7 @@ func BenchmarkHamtFirstRestIteration(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hh := h
 		for hh.Size() > 0 {
-			_, hh = hh.FirstRest()
+			_, hh, _ = hh.FirstRest()
 		}
 	}
 }
