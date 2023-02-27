@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewSet(t *testing.T) {
-	NewSet[entryInt]()
+	assert.Equal(t, NewSet[entryInt]().Size(), 0)
 }
 
 func TestSetInsert(t *testing.T) {

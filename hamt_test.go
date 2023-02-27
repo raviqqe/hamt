@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewHamt(t *testing.T) {
-	newHamt[entryInt](0)
+	assert.Equal(t, newHamt[entryInt](0).Size(), 0)
 }
 
 func TestHamtInsert(t *testing.T) {
