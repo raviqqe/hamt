@@ -6,10 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewHamt(t *testing.T) {
-	newHamt[entryInt](0)
-}
-
 func TestHamtInsert(t *testing.T) {
 	h := newHamt[entryInt](0).Insert(entryInt(42))
 

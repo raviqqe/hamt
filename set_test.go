@@ -7,10 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewSet(t *testing.T) {
-	NewSet[entryInt]()
-}
-
 func TestSetInsert(t *testing.T) {
 	s := NewSet[entryInt]()
 
