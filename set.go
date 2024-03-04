@@ -15,7 +15,7 @@ func NewSet[T Entry[T]]() Set[T] {
 func (s Set[T]) Insert(e T) Set[T] {
 	size := s.size
 
-	if s.find(e) == nil {
+	if !s.Include(e) {
 		size++
 	}
 
@@ -34,26 +34,28 @@ func (s Set[T]) Delete(e T) Set[T] {
 	return Set[T]{size, n.(hamt[T])}
 }
 
-func (s Set[T]) find(e T) *T {
+func (s Set[T]) find(e T) (_ T, ok bool) {
 	return s.hamt.Find(e)
 }
 
 // Include returns true if a given entry is included in a set, or false otherwise.
 func (s Set[T]) Include(e T) bool {
-	return s.find(e) != nil
+	_, ok := s.find(e)
+	return ok
 }
 
-// FirstRest returns a pointer to a value in a set and a rest of the set.
-// This method is useful for iteration.
-func (s Set[T]) FirstRest() (*T, Set[T]) {
-	e, n := s.hamt.FirstRest()
+// FirstRest returns a a value in a set and a rest of the set.
+// This method is useful for iteration. If the set is empty, ok will
+// be false.
+func (s Set[T]) FirstRest() (_ T, _ Set[T], ok bool) {
+	e, n, ok := s.hamt.FirstRest()
 	size := s.size
 
-	if e != nil {
+	if ok {
 		size--
 	}
 
-	return e, Set[T]{size, n.(hamt[T])}
+	return e, Set[T]{size, n.(hamt[T])}, ok
 }
 
 func (s Set[T]) ForEach(cb func(T) error) error {
@@ -63,9 +65,14 @@ func (s Set[T]) ForEach(cb func(T) error) error {
 // Merge merges 2 sets into one.
 func (s Set[T]) Merge(t Set[T]) Set[T] {
 	for t.Size() != 0 {
-		var e *T
-		e, t = t.FirstRest()
-		s = s.Insert(*e)
+		var (
+			e  T
+			ok bool
+		)
+		e, t, ok = t.FirstRest()
+		if ok {
+			s = s.Insert(e)
+		}
 	}
 
 	return s
