@@ -14,5 +14,5 @@ jobs:
       - run: go build
       - uses: golangci/golangci-lint-action@v9
       - run: go test -covermode atomic -coverprofile coverage.txt
-      - uses: codecov/codecov-action@v6
+      - uses: codecov/codecov-action@v7
       - run: go test -bench .
