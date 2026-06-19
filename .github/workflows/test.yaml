@@ -10,7 +10,7 @@ jobs:
     container:
       image: golang
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: go build
       - uses: golangci/golangci-lint-action@v9
       - run: go test -covermode atomic -coverprofile coverage.txt
