@@ -63,8 +63,7 @@ func (h hamt[T]) Delete(e T) (node[T], bool) {
 		case empty:
 			panic("Invariant error: trees must be normalized.")
 		case singleton:
-			e, _ := n.FirstRest()
-			c = *e
+			c, _, _ = n.FirstRest()
 		}
 
 		return h.setChild(i, c), true
@@ -74,42 +73,43 @@ func (h hamt[T]) Delete(e T) (node[T], bool) {
 }
 
 // Find finds a value in a HAMT.
-func (h hamt[T]) Find(e T) *T {
+func (h hamt[T]) Find(e T) (_ T, ok bool) {
 	switch x := h.children[h.calculateIndex(e)].(type) {
 	case T:
 		if x.Equal(e) {
-			return &x
+			return x, true
 		}
 	case node[T]:
 		return x.Find(e)
 	}
 
-	return nil
+	var ret T
+	return ret, false
 }
 
-// FirstRest returns a pointer to the first value and a HAMT without it.
-// If h is empty, the pointer will be nil.
-func (h hamt[T]) FirstRest() (*T, node[T]) {
+// FirstRest returns the first value and a HAMT without it.
+// If h is empty, ok will be false.
+func (h hamt[T]) FirstRest() (_ T, _ node[T], ok bool) {
 	// Traverse entries and sub nodes separately for cache locality.
 	for _, c := range h.children {
 		if e, ok := c.(T); ok {
 			h, _ := h.Delete(e)
-			return &e, h
+			return e, h, true
 		}
 	}
 
 	for i, c := range h.children {
 		if n, ok := c.(node[T]); ok {
-			var e *T
-			e, n = n.FirstRest()
+			e, n, ok := n.FirstRest()
 
-			if e != nil {
-				return e, h.setChild(i, n)
+			if ok {
+				return e, h.setChild(i, n), true
 			}
 		}
 	}
 
-	return nil, h // There is no entry inside.
+	var e T
+	return e, h, false // There is no entry inside.
 }
 
 func (h hamt[T]) ForEach(cb func(T) error) error {

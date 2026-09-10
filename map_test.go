@@ -17,7 +17,9 @@ func TestMapInsert(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 		e := entryInt(rand.Int31())
 		m = m.Insert(e, "value")
-		assert.Equal(t, "value", *m.Find(e))
+		v, ok := m.Find(e)
+		assert.True(t, ok)
+		assert.Equal(t, "value", v)
 	}
 }
 
@@ -31,7 +33,9 @@ func TestMapOperations(t *testing.T) {
 		if rand.Int()%2 == 0 {
 			mm = m.Insert(k, "value")
 
-			assert.Equal(t, "value", *mm.Find(k))
+			v, ok := mm.Find(k)
+			assert.True(t, ok)
+			assert.Equal(t, "value", v)
 
 			if m.Include(k) {
 				assert.Equal(t, m.Size(), mm.Size())
@@ -41,7 +45,8 @@ func TestMapOperations(t *testing.T) {
 		} else {
 			mm = m.Delete(k)
 
-			assert.Nil(t, mm.Find(k))
+			_, ok := mm.Find(k)
+			assert.False(t, ok)
 
 			if m.Include(k) {
 				assert.Equal(t, m.Size()-1, mm.Size())
@@ -56,27 +61,27 @@ func TestMapOperations(t *testing.T) {
 
 func TestMapFirstRest(t *testing.T) {
 	m := NewMap[entryInt, string]()
-	k, v, mm := m.FirstRest()
+	_, _, mm, ok := m.FirstRest()
 
-	assert.Nil(t, k)
-	assert.Nil(t, v)
+	assert.False(t, ok)
 	assert.Equal(t, 0, mm.Size())
 
 	m = m.Insert(entryInt(42), "value")
-	k, v, mm = m.FirstRest()
+	k, v, mm, ok := m.FirstRest()
 
-	assert.Equal(t, entryInt(42), *k)
-	assert.Equal(t, "value", *v)
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), k)
+	assert.Equal(t, "value", v)
 	assert.Equal(t, 0, mm.Size())
 
 	m = m.Insert(entryInt(2049), "value")
 	s := m.Size()
 
 	for i := 0; i < s; i++ {
-		k, v, m = m.FirstRest()
+		_, v, m, ok = m.FirstRest()
 
-		assert.NotNil(t, k)
-		assert.Equal(t, "value", *v)
+		assert.True(t, ok)
+		assert.Equal(t, "value", v)
 		assert.Equal(t, 1-i, m.Size())
 	}
 }

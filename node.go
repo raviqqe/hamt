@@ -12,8 +12,8 @@ const (
 type node[T Entry[T]] interface {
 	Insert(T) node[T]
 	Delete(T) (node[T], bool)
-	Find(T) *T
-	FirstRest() (*T, node[T])
+	Find(T) (_ T, ok bool)
+	FirstRest() (_ T, _ node[T], ok bool)
 	ForEach(func(T) error) error
 	State() nodeState
 	Size() int // for debugging

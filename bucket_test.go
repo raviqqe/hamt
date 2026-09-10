@@ -16,24 +16,36 @@ func TestBucketInsert(t *testing.T) {
 	b := newBucket[entryInt]().Insert(entryInt(42))
 
 	assert.Equal(t, 1, b.Size())
-	assert.Equal(t, entryInt(42), *b.Find(entryInt(42)))
+	v, ok := b.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
 
 	b = b.Insert(entryInt(42))
 
 	assert.Equal(t, 1, b.Size())
-	assert.Equal(t, entryInt(42), *b.Find(entryInt(42)))
+	v, ok = b.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
 
 	b = b.Insert(entryInt(2049))
 
 	assert.Equal(t, 2, b.Size())
-	assert.Equal(t, entryInt(42), *b.Find(entryInt(42)))
-	assert.Equal(t, entryInt(2049), *b.Find(entryInt(2049)))
+	v, ok = b.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
+	v, ok = b.Find(entryInt(2049))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(2049), v)
 
 	b = b.Insert(entryInt(2049))
 
 	assert.Equal(t, 2, b.Size())
-	assert.Equal(t, entryInt(42), *b.Find(entryInt(42)))
-	assert.Equal(t, entryInt(2049), *b.Find(entryInt(2049)))
+	v, ok = b.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
+	v, ok = b.Find(entryInt(2049))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(2049), v)
 }
 
 func TestBucketInsertAsMap(t *testing.T) {
@@ -41,13 +53,17 @@ func TestBucketInsertAsMap(t *testing.T) {
 	b := newBucket[keyValue[entryInt, string]]().Insert(kv)
 
 	assert.Equal(t, 1, b.Size())
-	assert.EqualValues(t, kv, *b.Find(kv))
+	v, ok := b.Find(kv)
+	assert.True(t, ok)
+	assert.EqualValues(t, kv, v)
 
 	new := newTestKeyValue(0, "bar")
 	b = b.Insert(new)
 
 	assert.Equal(t, 1, b.Size())
-	assert.EqualValues(t, new, *b.Find(kv))
+	v, ok = b.Find(kv)
+	assert.True(t, ok)
+	assert.EqualValues(t, new, v)
 }
 
 func TestBucketDelete(t *testing.T) {
@@ -55,7 +71,8 @@ func TestBucketDelete(t *testing.T) {
 
 	assert.True(t, changed)
 	assert.Equal(t, 0, b.Size())
-	assert.Nil(t, b.Find(entryInt(42)))
+	_, ok := b.Find(entryInt(42))
+	assert.False(t, ok)
 }
 
 func TestBucketDeleteNonExistentEntries(t *testing.T) {
@@ -68,32 +85,36 @@ func TestBucketDeleteNonExistentEntries(t *testing.T) {
 
 	assert.False(t, changed)
 	assert.Equal(t, 1, b.Size())
-	assert.Equal(t, entryInt(42), *b.Find(entryInt(42)))
+	v, ok := b.Find(entryInt(42))
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), v)
 }
 
 func TestBucketFind(t *testing.T) {
-	assert.Nil(t, newBucket[entryInt]().Find(entryInt(42)))
+	_, ok := newBucket[entryInt]().Find(entryInt(42))
+	assert.False(t, ok)
 }
 
 func TestBucketFirstRest(t *testing.T) {
-	e, b := newBucket[entryInt]().FirstRest()
+	_, b, ok := newBucket[entryInt]().FirstRest()
 
-	assert.Nil(t, e)
+	assert.False(t, ok)
 	assert.Equal(t, 0, b.Size())
 
 	b = b.Insert(entryInt(42))
-	e, r := b.FirstRest()
+	e, r, ok := b.FirstRest()
 
-	assert.Equal(t, entryInt(42), *e)
+	assert.True(t, ok)
+	assert.Equal(t, entryInt(42), e)
 	assert.Equal(t, 0, r.Size())
 
 	b = b.Insert(entryInt(2049))
 	s := b.Size()
 
 	for i := 0; i < s; i++ {
-		e, b = b.FirstRest()
+		_, b, ok = b.FirstRest()
 
-		assert.NotEqual(t, nil, e)
+		assert.True(t, ok)
 		assert.Equal(t, 1-i, b.Size())
 	}
 }

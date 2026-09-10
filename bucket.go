@@ -19,14 +19,15 @@ func (b bucket[T]) Insert(e T) node[T] {
 	return append(b, e)
 }
 
-func (b bucket[T]) Find(e T) *T {
+func (b bucket[T]) Find(e T) (_ T, ok bool) {
 	for _, f := range b {
 		if e.Equal(f) {
-			return &f
+			return f, true
 		}
 	}
 
-	return nil
+	var ret T
+	return ret, false
 }
 
 func (b bucket[T]) Delete(e T) (node[T], bool) {
@@ -39,12 +40,13 @@ func (b bucket[T]) Delete(e T) (node[T], bool) {
 	return b, false
 }
 
-func (b bucket[T]) FirstRest() (*T, node[T]) {
+func (b bucket[T]) FirstRest() (_ T, _ node[T], ok bool) {
 	if len(b) == 0 {
-		return nil, b
+		var ret T
+		return ret, b, false
 	}
 
-	return &b[0], b[1:]
+	return b[0], b[1:], true
 }
 
 func (b bucket[T]) ForEach(cb func(T) error) error {
