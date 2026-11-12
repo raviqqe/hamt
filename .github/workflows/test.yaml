@@ -11,9 +11,9 @@ jobs:
     container:
       image: golang
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
       - run: go build
-      - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+      - uses: golangci/golangci-lint-action@v9.3.0
       - run: go test -covermode atomic -coverprofile coverage.txt
-      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+      - uses: codecov/codecov-action@v7.1.1
       - run: go test -bench .
